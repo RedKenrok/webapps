@@ -1122,14 +1122,15 @@
     storyError: false,
     storyPending: false,
     storyMessages: [],
-    typingInput: "",
-    typingError: false,
-    typingPending: false,
-    typingMessages: [],
     typingCurrentIndex: 0,
-    typingStartTime: null,
     typingEndTime: null,
+    typingError: false,
+    typingInput: "",
+    typingLength: "medium",
+    typingMessage: [],
     typingMistakes: 0,
+    typingPending: false,
+    typingStartTime: null,
     vocabularyInput: "",
     vocabularyReviewed: false,
     vocabularyError: false,
@@ -1287,7 +1288,7 @@
       "prompt-topic": ' Incorporate the following topic into your message "{%topic%}".',
       "prompt-vocabulary": "Write a word in {%t:{%s:targetLanguage%}%} along with its definition in {%t:{%s:sourceLocale%}%}. The user will then write a sentence in {%t:{%s:targetLanguage%}%} in which this word must be used. Take into account the user's skill and language level. Do not provide any additional instructions, explanations, or the answer to the user. Always write in plain text without any formatting, labels, headings, or lists.",
       "prompt-vocabulary-follow_up": "Provide feedback on the sentence in which the user has answered. Check whether the word has been used correctly in the sentence. Provide concise feedback on the {%t:{%s:targetLanguage%}%} with considerable depth that is clear enough for the user's level of knowledge. Write the feedback in {%t:{%s:sourceLocale%}%}. Focus exclusively on linguistic aspects and ignore content-related evaluations or interpretations of the message. Always write in plain text without any formatting, labels, headings, or lists.",
-      "prompt-typing": "Write a short text in {%t:{%s:targetLanguage%}%}. The text should be suitable for typing practice. Use common words appropriate for the user's skill and language level. Avoid special characters. Always write in plain text without any formatting, labels, headings, or lists.",
+      "prompt-typing": "Write a text in {%t:{%s:targetLanguage%}%}. The text should be suitable for typing practice. Use common words appropriate for the user's skill and language level. Avoid special characters. The text should be {%typingLength%} in length. Always write in plain text without any formatting, labels, headings, or lists.",
       "prompt-translate": "The user has requested a translation of the selected text. Translate all the {%t:{%s:sourceLocale%}%} into {%t:{%s:targetLanguage%}%} and {%t:{%s:targetLanguage%}%} into {%t:{%s:sourceLocale%}%}. Do not provide any further instructions or explanations to the user. Always write in plain text without any formatting, labels, headings, or lists.",
       "prompt-translate-user": 'Translate the selected text in {%t:{%s:sourceLocale%}%}. The user has selected the following text: "{%s:selection.text%}".',
       "prompt-translate-context": 'It was selected from the context: "{%s:selection.context%}". Translate only the selected text and not the entire context.',
@@ -1386,11 +1387,16 @@
       "rewrite-placeholder": "I want to let rewrite...",
       "story-intro": "You're about to write a story in {%t:{%s:targetLanguage%}%} where, in turns, you add a piece. Don't worry about whether the story is good, logical, or well-founded; just make sure you practice the language. Therefore, always respond in {%t:{%s:targetLanguage%}%}. In between, you might receive some feedback on your writing.",
       "vocabulary-intro": "In a moment you'll read a word together with its definition in {%t:{%s:targetLanguage%}%}. Answer with a scentence that uses the word in {%t:{%s:targetLanguage%}%}. You'll then receive some feedback regarding your answer.",
-      "typing-intro": "Type the text below. The cursor will advance as you type each character correctly. You can specify a topic for the text below.",
+      "typing-intro": "You're about to retype a text in in {%t:{%s:targetLanguage%}%} below. The cursor will advance as you type each character correctly. You can specify a topic for as well as the length of the text below.",
       "typing-completed": "Exercise completed!",
       "typing-placeholder": "I want to type about...",
       "typing-results-summary": "The text consists of {%words%} words and {%characters%} characters. You typed the text in {%minutes%} minutes and {%seconds%} seconds, which means you typed at an average of {%wpm%} words per minute. You made {%mistakes%} mistakes, resulting in an accuracy of {%accuracy%}%.",
       "typing-restart": "Restart",
+      "typing-length-select": "Text length",
+      "typing-length-short": "Short (≈50 words)",
+      "typing-length-medium": "Medium (≈100 words)",
+      "typing-length-long": "Long (≈200 words)",
+      "typing-length-extra_long": "Extra long (≈400 words)",
       "overview-typing-title": "Practise typing",
       "overview-typing-description": "Improve your typing speed and accuracy in {%t:{%s:targetLanguage%}%}."
     },
@@ -1460,7 +1466,7 @@
       "prompt-topic": ' Verwerk het volgende onderwerp in jouw bericht "{%topic%}".',
       "prompt-vocabulary": "Schrijf een woord in het {%t:{%s:targetLanguage%}%} samen met de definitie in het {%t:{%s:sourceLocale%}%}. De gebruiker zal vervolgens een zin in het {%t:{%s:targetLanguage%}%} schrijven waarin dit woord verwerkt moeten worden. Hou hierbij rekening met de vaardigheid en taalniveau van de gebruiker. Geef geen verdere instructies, uitleg of het antwoord aan de gebruiker. Schrijf altijd in platte tekst zonder enige opmaak, labels, kopteksten of lijsten.",
       "prompt-vocabulary-follow_up": "Geef feedback op de zin waarmee de gebruik antwoord heeft gegeven. Controleer of de woord juist gebruikt is in de zin. Geef beknopt feedback over het {%t:{%s:targetLanguage%}%} met veel diepgang dat duidelijk genoeg is voor het kennis niveau van de gebruiker. Schrijf de feedback in het {%t:{%s:sourceLocale%}%}. Richt je hierbij uitsluitend op taalkundige aspecten en negeer inhoudelijke evaluaties of interpretaties van het bericht. Schrijf altijd in platte tekst zonder enige opmaak, labels, kopteksten of lijsten.",
-      "prompt-typing": "Schrijf een korte tekst in het {%t:{%s:targetLanguage%}%}. De tekst moet geschikt zijn voor type oefening. Gebruik veelvoorkomende woorden die passend zijn bij het vaardigheid en taalniveau van de gebruiker. Vermijd speciale tekens. Schrijf altijd in platte tekst zonder enige opmaak, labels, kopteksten of lijsten.",
+      "prompt-typing": "Schrijf een tekst in het {%t:{%s:targetLanguage%}%}. De tekst moet geschikt zijn voor type oefening. Gebruik veelvoorkomende woorden die passend zijn bij het vaardigheid en taalniveau van de gebruiker. Vermijd speciale tekens. De tekst moet {%typingLength%} zijn in lengte. Schrijf altijd in platte tekst zonder enige opmaak, labels, kopteksten of lijsten.",
       "prompt-translate": "De gebruiker heeft een vertaling van de geselecteerde tekst aangevraagd. Vertaal alle {%t:{%s:sourceLocale%}%} naar {%t:{%s:targetLanguage%}%} en {%t:{%s:targetLanguage%}%} naar {%t:{%s:sourceLocale%}%}. Geef de gebruiker geen verdere instructies of uitleg. Schrijf altijd in platte tekst zonder opmaak, labels, kopjes of lijsten.",
       "prompt-translate-user": 'Vertaal de geselecteerde tekst in {%t:{%s:sourceLocale%}%}. De gebruiker heeft de volgende tekst geselecteerd: "{%s:selection.text%}".',
       "prompt-translate-context": 'Deze is geselecteerd uit de context: "{%s:selection.context%}". Let op vertaal niet de context, maar alleen de selectie.',
@@ -1559,11 +1565,16 @@
       "rewrite-placeholder": "Ik wil laten herschrijven...",
       "story-intro": "Je gaat straks een verhaal schrijven in het {%t:{%s:targetLanguage%}%} waarbij je omste beurten een stuk toevoegd. Maak je geen zorgen of het verhaal een goed, logisch en gegrond verhaal is, maar zorg vooral dat je de taal oefened. Zorg daarom dat je ook altijd in het {%t:{%s:targetLanguage%}%} antwoord. Tussendoor zal je enige verbeterpunten kunnen ontvangen.",
       "vocabulary-intro": "Je leest straks een woord samen met de definitie ervan in het {%t:{%s:targetLanguage%}%}. Antwoord met een zin waar het woord ingebruikt wordt in het {%t:{%s:targetLanguage%}%}. Vervolgens zal je enige verbeterpunten krijgen over jouw antwoord.",
-      "typing-intro": "Type onderstaande tekst. De cursor gaat verder als je elk teken correct typt. Je kunt hieronder een onderwerp opgeven waar je wilt dat de tekst over gaat.",
+      "typing-intro": "Je gaat straks een tekst overtypen in het {%t:{%s:targetLanguage%}%}. De cursor gaat verder als je elk teken correct typt. Je kunt hieronder een onderwerp opgeven waar je wilt dat de tekst over gaat en hoe lang de tekst moet zijn.",
       "typing-placeholder": "Ik wil typen over...",
       "typing-completed": "Oefening voltooid!",
       "typing-results-summary": "De tekst bestaat uit {%words%} woorden en {%characters%} letters. Je hebt de tekst getypt in {%minutes%} minuten en {%seconds%} seconden dit betekend dat je gemiddeld {%wpm%} woorden per minuut hebt getypt. Je hebt {%mistakes%} fouten gemaakt en hebt daarmee een nauwkeurigheid van {%accuracy%}%.",
       "typing-restart": "Herstarten",
+      "typing-length_select": "Tekstlengte",
+      "typing-length_short": "Kort (≈50 woorden)",
+      "typing-length_medium": "Medium (≈100 woorden)",
+      "typing-length_long": "Lang (≈200 woorden)",
+      "typing-length_extra_long": "Extra lang (≈400 woorden)",
       "overview-typing-title": "Oefen typen",
       "overview-typing-description": "Verbeter je typingsnelheid en nauwkeurigheid in het {%t:{%s:targetLanguage%}%}."
     }
@@ -3280,6 +3291,10 @@
     const profile2 = getActiveProfile(state);
     profile2.typingInput = event.target.value;
   };
+  var handleLengthChange = (event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.typingLength = event.target.value;
+  };
   var handleGenerate6 = (_event, state) => {
     const profile2 = getActiveProfile(state);
     if (!profile2.typingPending) {
@@ -3296,7 +3311,7 @@
           content: profile2.typingInput.trim()
         });
       }
-      createMessage6(state, messages, translate(state, "prompt-context"), translate(state, "prompt-typing")).then(([error, _response, result]) => {
+      createMessage6(state, messages, translate(state, "prompt-context"), translate(state, "prompt-typing").replace("{%typingLength%}", translate(state, "typing-length_" + profile2.typingLength))).then(([error, _response, result]) => {
         profile2.typingPending = false;
         if (error) {
           profile2.typingError = error.toString();
@@ -3308,6 +3323,7 @@
         profile2.typingStartTime = null;
         profile2.typingEndTime = null;
         handleTypingClick();
+        requestAnimationFrame(() => scrollToCurrentCharacter(state));
       });
     }
   };
@@ -3356,6 +3372,7 @@
         state.statisticTypingActivity++;
         onActivity(state);
       }
+      requestAnimationFrame(() => scrollToCurrentCharacter(state));
     } else {
       profile2.typingMistakes++;
     }
@@ -3378,12 +3395,26 @@
         state.statisticTypingActivity++;
         onActivity(state);
       }
+      requestAnimationFrame(() => scrollToCurrentCharacter(state));
     } else {
       profile2.typingMistakes++;
     }
   };
   var handleTypingClick = () => {
     document.querySelector(".typing-input-hidden")?.focus();
+  };
+  var scrollToCurrentCharacter = (state) => {
+    const profile2 = getActiveProfile(state);
+    if (!profile2.typingMessage || profile2.typingCurrentIndex < 0) {
+      return;
+    }
+    const container = document.querySelector(".typing-text-container");
+    const currentElement = document.querySelector(".typing-text .current");
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = currentElement.getBoundingClientRect();
+    const elementCenter = elementRect.top - containerRect.top + elementRect.height / 2;
+    const containerCenter = containerRect.height / 2;
+    container.scrollTop += elementCenter - containerCenter;
   };
   var formatResultsSummary = (state) => {
     const profile2 = getActiveProfile(state);
@@ -3419,9 +3450,20 @@
               id: "input-topic",
               input: handleInput8,
               placeholder: translate(state, "typing-placeholder")
-            }, profile2.typingInput || "")
+            }, profile2.typingInput || ""),
+            node("label", {
+              for: "typing-input_length",
+              class: "sr-only"
+            }, translate(state, "typing-length_select")),
+            node("select", {
+              id: "typing-input_length",
+              change: handleLengthChange
+            }, ["short", "medium", "long", "extra_long"].map((length) => node("option", {
+              value: length,
+              selected: profile2.typingLength === length
+            }, translate(state, "typing-length_" + length))))
           ]),
-          ...conditional(profile2.typingMessage && profile2.typingMessage.length > 0, [
+          ...conditional(profile2.typingMessage, [
             node("input", {
               type: "text",
               class: "typing-input-hidden",
@@ -3433,7 +3475,7 @@
               spellcheck: false
             }),
             node("p", {
-              class: "message-user",
+              class: "message-user typing-text-container",
               click: handleTypingClick
             }, [
               node("code", {
@@ -3466,7 +3508,7 @@
       node("div", {
         class: "row reverse"
       }, [
-        ...conditional(profile2.typingPending || profile2.typingMessages && profile2.typingMessages.length === 0, node("button", {
+        ...conditional(!profile2.typingPending && !profile2.typingMessage, node("button", {
           click: handleGenerate6,
           disabled: profile2.typingPending,
           type: "button"
@@ -3475,7 +3517,7 @@
           type: "button",
           click: handleRestart
         }, translate(state, "typing-restart"))),
-        ...conditional(profile2.typingMessages.length > 0 && !profile2.typingPending, node("button", {
+        ...conditional(!profile2.typingPending && profile2.typingMessage, node("button", {
           type: "button",
           click: handleReset9
         }, translate(state, "button-reset"))),
@@ -3641,4 +3683,4 @@
   }
 })();
 
-//# debugId=3ADAA599027BFFE464756E2164756E21
+//# debugId=02BDC2C8211FFF7464756E2164756E21

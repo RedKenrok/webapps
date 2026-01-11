@@ -1,4 +1,5 @@
 @import '../shared/reset/sanitize.css';
+@import '../shared/reset/accessibility.css';
 @import '../shared/reset/reduce-motion.css';
 @import '../shared/reset/forms.css';
 @import '../shared/reset/typography.css';

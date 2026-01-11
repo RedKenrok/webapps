@@ -12,6 +12,18 @@
   outline: none;
 }
 
+.typing-text-container {
+  max-height: 6em;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.typing-text-container code {
+  display: block;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+
 .typing-text .completed,
 .typing-text .remaining {
   color: var(--muted);
@@ -21,4 +33,9 @@
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 2px;
+}
+
+select#typing-input_length {
+  margin-left: 2rem;
+  width: calc(100% - 2rem);
 }

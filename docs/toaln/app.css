@@ -181,6 +181,18 @@
   position: absolute;
 }
 
+/* src/shared/reset/accessibility.css */
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+}
+
 /* src/shared/reset/reduce-motion.css */
 @media (prefers-reduced-motion: reduce) {
   *, :before, :after {
@@ -539,6 +551,18 @@ p:has(code) {
   outline: none;
 }
 
+.typing-text-container {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  max-height: 6em;
+}
+
+.typing-text-container code {
+  display: block;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+
 .typing-text .completed, .typing-text .remaining {
   color: var(--muted);
 }
@@ -547,6 +571,11 @@ p:has(code) {
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 2px;
+}
+
+select#typing-input_length {
+  width: calc(100% - 2rem);
+  margin-left: 2rem;
 }
 
 /* src/toaln/styles/popup-modal.css */

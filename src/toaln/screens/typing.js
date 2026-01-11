@@ -20,6 +20,14 @@ const handleInput = (
   profile.typingInput = event.target.value
 }
 
+const handleLengthChange = (
+  event,
+  state,
+) => {
+  const profile = getActiveProfile(state)
+  profile.typingLength = event.target.value
+}
+
 const handleGenerate = (
   _event,
   state,
@@ -48,7 +56,8 @@ const handleGenerate = (
       state,
       messages,
       t(state, 'prompt-context'),
-      t(state, 'prompt-typing'),
+      t(state, 'prompt-typing')
+        .replace('{%typingLength%}', t(state, 'typing-length_' + profile.typingLength)),
     ).then(([error, _response, result]) => {
       profile.typingPending = false
       if (error) {
@@ -62,6 +71,9 @@ const handleGenerate = (
       profile.typingEndTime = null
 
       handleTypingClick()
+      requestAnimationFrame(
+        () => scrollToCurrentCharacter(state),
+      )
     })
   }
 }
@@ -135,6 +147,10 @@ const handleKeyDown = (
       state.statisticTypingActivity++
       onActivity(state)
     }
+
+    requestAnimationFrame(
+      () => scrollToCurrentCharacter(state),
+    )
   } else {
     profile.typingMistakes++
   }
@@ -167,6 +183,10 @@ const handleCompositionEnd = (
       state.statisticTypingActivity++
       onActivity(state)
     }
+
+    requestAnimationFrame(
+      () => scrollToCurrentCharacter(state),
+    )
   } else {
     profile.typingMistakes++
   }
@@ -175,6 +195,28 @@ const handleCompositionEnd = (
 const handleTypingClick = (
 ) => {
   document.querySelector('.typing-input-hidden')?.focus()
+}
+
+const scrollToCurrentCharacter = (
+  state,
+) => {
+  const profile = getActiveProfile(state)
+  if (
+    !profile.typingMessage
+    || profile.typingCurrentIndex < 0
+  ) {
+    return
+  }
+
+  const container = document.querySelector('.typing-text-container')
+  const currentElement = document.querySelector('.typing-text .current')
+  const containerRect = container.getBoundingClientRect()
+  const elementRect = currentElement.getBoundingClientRect()
+
+  const elementCenter = elementRect.top - containerRect.top + (elementRect.height / 2)
+  const containerCenter = containerRect.height / 2
+
+  container.scrollTop += elementCenter - containerCenter
 }
 
 const formatResultsSummary = (
@@ -241,60 +283,72 @@ export const typing = (
               input: handleInput,
               placeholder: t(state, 'typing-placeholder'),
             }, profile.typingInput || ''),
-          ],
-        ),
 
-        ...c(
-          profile.typingMessage
-          && profile.typingMessage.length > 0,
-          [
-            n('input', {
-              type: 'text',
-              class: 'typing-input-hidden',
-              keydown: handleKeyDown,
-              compositionend: handleCompositionEnd,
-              autocapitalize: 'off',
-              autocorrect: 'off',
-              autocomplete: 'off',
-              spellcheck: false,
-            }),
-
-            n('p', {
-              class: 'message-user',
-              click: handleTypingClick,
-            }, [
-              n('code', {
-                class: 'typing-text',
-              },
-                (profile.typingMessage ?? '').split('')
-                  .map((character, index) => {
-                    let characterClass = 'remaining'
-                    if (index < profile.typingCurrentIndex) {
-                      characterClass = 'completed'
-                    } else if (index === profile.typingCurrentIndex) {
-                      characterClass = 'current'
-                    }
-                    if (character === ' ') {
-                      character = '\u00a0\u200B'
-                    }
-                    return n('span', {
-                      class: characterClass,
-                    }, character)
-                  })
+            n('label', {
+              for: 'typing-input_length',
+              class: 'sr-only',
+            }, t(state, 'typing-length_select')),
+            n('select', {
+              id: 'typing-input_length',
+              change: handleLengthChange,
+            }, ['short', 'medium', 'long', 'extra_long']
+              .map(length =>
+                n('option', {
+                  value: length,
+                  selected: profile.typingLength === length,
+                }, t(state, 'typing-length_' + length)),
               ),
-            ]),
-
-            ...c(
-              profile.typingEndTime,
-              n('p', {
-                class: 'message-assistant',
-              }, [
-                n('p', t(state, 'typing-completed')),
-                n('p', formatResultsSummary(state)),
-              ]),
             ),
           ],
         ),
+
+        ...c(profile.typingMessage, [
+          n('input', {
+            type: 'text',
+            class: 'typing-input-hidden',
+            keydown: handleKeyDown,
+            compositionend: handleCompositionEnd,
+            autocapitalize: 'off',
+            autocorrect: 'off',
+            autocomplete: 'off',
+            spellcheck: false,
+          }),
+
+          n('p', {
+            class: 'message-user typing-text-container',
+            click: handleTypingClick,
+          }, [
+            n('code', {
+              class: 'typing-text',
+            },
+              (profile.typingMessage ?? '').split('')
+                .map((character, index) => {
+                  let characterClass = 'remaining'
+                  if (index < profile.typingCurrentIndex) {
+                    characterClass = 'completed'
+                  } else if (index === profile.typingCurrentIndex) {
+                    characterClass = 'current'
+                  }
+                  if (character === ' ') {
+                    character = '\u00a0\u200B'
+                  }
+                  return n('span', {
+                    class: characterClass,
+                  }, character)
+                })
+            ),
+          ]),
+
+          ...c(
+            profile.typingEndTime,
+            n('p', {
+              class: 'message-assistant',
+            }, [
+              n('p', t(state, 'typing-completed')),
+              n('p', formatResultsSummary(state)),
+            ]),
+          ),
+        ]),
       ]),
     ]),
 
@@ -307,11 +361,8 @@ export const typing = (
       class: 'row reverse',
     }, [
       ...c(
-        profile.typingPending
-        || (
-          profile.typingMessages
-          && profile.typingMessages.length === 0
-        ),
+        !profile.typingPending
+        && !profile.typingMessage,
         n('button', {
           click: handleGenerate,
           disabled: profile.typingPending,
@@ -328,8 +379,8 @@ export const typing = (
       ),
 
       ...c(
-        profile.typingMessages.length > 0
-        && !profile.typingPending,
+        !profile.typingPending
+        && profile.typingMessage,
         n('button', {
           type: 'button',
           click: handleReset,
