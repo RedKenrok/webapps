@@ -12,6 +12,13 @@ import { translate as t } from '../data/translations.js'
 import { setScreen } from '../utilities/screen.js'
 import { onActivity } from '../utilities/streak.js'
 
+const TYPING_LENGTHS = [
+  'short',
+  'medium',
+  'long',
+  'extra_long',
+]
+
 const handleInput = (
   event,
   state,
@@ -57,7 +64,7 @@ const handleGenerate = (
       messages,
       t(state, 'prompt-context'),
       t(state, 'prompt-typing')
-        .replace('{%typingLength%}', t(state, 'typing-length_' + profile.typingLength)),
+        .replace('{%typingLength%}', t(state, 'typing-length_' + (profile.typingLength ?? TYPING_LENGTHS[0]))),
     ).then(([error, _response, result]) => {
       profile.typingPending = false
       if (error) {
@@ -70,9 +77,11 @@ const handleGenerate = (
       profile.typingStartTime = null
       profile.typingEndTime = null
 
-      handleTypingClick()
       requestAnimationFrame(
-        () => scrollToCurrentCharacter(state),
+        () => {
+          handleTypingClick()
+          scrollToCurrentCharacter(state)
+        },
       )
     })
   }
@@ -83,14 +92,14 @@ const handleReset = (
   state,
 ) => {
   const profile = getActiveProfile(state)
+  profile.typingCurrentIndex = 0
+  profile.typingEndTime = null
   profile.typingError = false
   profile.typingInput = ''
   profile.typingMessage = null
-  profile.typingPending = false
-  profile.typingCurrentIndex = 0
   profile.typingMistakes = 0
+  profile.typingPending = false
   profile.typingStartTime = null
-  profile.typingEndTime = null
 }
 
 const handleBack = (
@@ -105,13 +114,21 @@ const handleRestart = (
   state,
 ) => {
   const profile = getActiveProfile(state)
-  if (profile.typingMessage) {
-    profile.typingCurrentIndex = 0
-    profile.typingMistakes = 0
-    profile.typingStartTime = null
-    profile.typingEndTime = null
-    profile.typingComposing = null
+  if (!profile.typingMessage) {
+    return
   }
+  profile.typingComposing = null
+  profile.typingCurrentIndex = 0
+  profile.typingEndTime = null
+  profile.typingMistakes = 0
+  profile.typingStartTime = null
+
+  requestAnimationFrame(
+    () => {
+      handleTypingClick()
+      scrollToCurrentCharacter(state)
+    },
+  )
 }
 
 const handleKeyDown = (
@@ -210,6 +227,12 @@ const scrollToCurrentCharacter = (
 
   const container = document.querySelector('.typing-text-container')
   const currentElement = document.querySelector('.typing-text .current')
+  if (
+    !container
+    || !currentElement
+  ) {
+    return
+  }
   const containerRect = container.getBoundingClientRect()
   const elementRect = currentElement.getBoundingClientRect()
 
@@ -252,8 +275,6 @@ export const typing = (
   state,
 ) => {
   const profile = getActiveProfile(state)
-  console.log(profile)
-
   return [
     n('p', [
       n('b', t(state, 'greeting')),
@@ -291,14 +312,12 @@ export const typing = (
             n('select', {
               id: 'typing-input_length',
               change: handleLengthChange,
-            }, ['short', 'medium', 'long', 'extra_long']
-              .map(length =>
-                n('option', {
-                  value: length,
-                  selected: profile.typingLength === length,
-                }, t(state, 'typing-length_' + length)),
-              ),
-            ),
+            }, TYPING_LENGTHS.map(length =>
+              n('option', {
+                value: length,
+                selected: profile.typingLength === length,
+              }, t(state, 'typing-length_' + length)),
+            )),
           ],
         ),
 

@@ -478,7 +478,7 @@ export const TRANSLATIONS = Object.freeze({
     'story-intro': 'Je gaat straks een verhaal schrijven in het {%t:{%s:targetLanguage%}%} waarbij je omste beurten een stuk toevoegd. Maak je geen zorgen of het verhaal een goed, logisch en gegrond verhaal is, maar zorg vooral dat je de taal oefened. Zorg daarom dat je ook altijd in het {%t:{%s:targetLanguage%}%} antwoord. Tussendoor zal je enige verbeterpunten kunnen ontvangen.',
     'vocabulary-intro': 'Je leest straks een woord samen met de definitie ervan in het {%t:{%s:targetLanguage%}%}. Antwoord met een zin waar het woord ingebruikt wordt in het {%t:{%s:targetLanguage%}%}. Vervolgens zal je enige verbeterpunten krijgen over jouw antwoord.',
 
-    'typing-intro': 'Je gaat straks een tekst overtypen in het {%t:{%s:targetLanguage%}%}. De cursor gaat verder als je elk teken correct typt. Je kunt hieronder een onderwerp opgeven waar je wilt dat de tekst over gaat en hoe lang de tekst moet zijn.',
+    'typing-intro': 'Je gaat straks een tekst overtypen in het {%t:{%s:targetLanguage%}%}. De cursor gaat verder als je elk teken correct typt. Je kunt hieronder een onderwerp opgeven waar je wilt dat de tekst over gaat samen met hoe lang de tekst moet zijn.',
     'typing-placeholder': 'Ik wil typen over...',
     'typing-completed': 'Oefening voltooid!',
     'typing-results-summary': 'De tekst bestaat uit {%words%} woorden en {%characters%} letters. Je hebt de tekst getypt in {%minutes%} minuten en {%seconds%} seconden dit betekend dat je gemiddeld {%wpm%} woorden per minuut hebt getypt. Je hebt {%mistakes%} fouten gemaakt en hebt daarmee een nauwkeurigheid van {%accuracy%}%.',

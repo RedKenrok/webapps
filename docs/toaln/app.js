@@ -1565,7 +1565,7 @@
       "rewrite-placeholder": "Ik wil laten herschrijven...",
       "story-intro": "Je gaat straks een verhaal schrijven in het {%t:{%s:targetLanguage%}%} waarbij je omste beurten een stuk toevoegd. Maak je geen zorgen of het verhaal een goed, logisch en gegrond verhaal is, maar zorg vooral dat je de taal oefened. Zorg daarom dat je ook altijd in het {%t:{%s:targetLanguage%}%} antwoord. Tussendoor zal je enige verbeterpunten kunnen ontvangen.",
       "vocabulary-intro": "Je leest straks een woord samen met de definitie ervan in het {%t:{%s:targetLanguage%}%}. Antwoord met een zin waar het woord ingebruikt wordt in het {%t:{%s:targetLanguage%}%}. Vervolgens zal je enige verbeterpunten krijgen over jouw antwoord.",
-      "typing-intro": "Je gaat straks een tekst overtypen in het {%t:{%s:targetLanguage%}%}. De cursor gaat verder als je elk teken correct typt. Je kunt hieronder een onderwerp opgeven waar je wilt dat de tekst over gaat en hoe lang de tekst moet zijn.",
+      "typing-intro": "Je gaat straks een tekst overtypen in het {%t:{%s:targetLanguage%}%}. De cursor gaat verder als je elk teken correct typt. Je kunt hieronder een onderwerp opgeven waar je wilt dat de tekst over gaat samen met hoe lang de tekst moet zijn.",
       "typing-placeholder": "Ik wil typen over...",
       "typing-completed": "Oefening voltooid!",
       "typing-results-summary": "De tekst bestaat uit {%words%} woorden en {%characters%} letters. Je hebt de tekst getypt in {%minutes%} minuten en {%seconds%} seconden dit betekend dat je gemiddeld {%wpm%} woorden per minuut hebt getypt. Je hebt {%mistakes%} fouten gemaakt en hebt daarmee een nauwkeurigheid van {%accuracy%}%.",
@@ -3287,6 +3287,12 @@
   };
 
   // src/toaln/screens/typing.js
+  var TYPING_LENGTHS = [
+    "short",
+    "medium",
+    "long",
+    "extra_long"
+  ];
   var handleInput8 = (event, state) => {
     const profile2 = getActiveProfile(state);
     profile2.typingInput = event.target.value;
@@ -3311,7 +3317,7 @@
           content: profile2.typingInput.trim()
         });
       }
-      createMessage6(state, messages, translate(state, "prompt-context"), translate(state, "prompt-typing").replace("{%typingLength%}", translate(state, "typing-length_" + profile2.typingLength))).then(([error, _response, result]) => {
+      createMessage6(state, messages, translate(state, "prompt-context"), translate(state, "prompt-typing").replace("{%typingLength%}", translate(state, "typing-length_" + (profile2.typingLength ?? TYPING_LENGTHS[0])))).then(([error, _response, result]) => {
         profile2.typingPending = false;
         if (error) {
           profile2.typingError = error.toString();
@@ -3322,34 +3328,41 @@
         profile2.typingMistakes = 0;
         profile2.typingStartTime = null;
         profile2.typingEndTime = null;
-        handleTypingClick();
-        requestAnimationFrame(() => scrollToCurrentCharacter(state));
+        requestAnimationFrame(() => {
+          handleTypingClick();
+          scrollToCurrentCharacter(state);
+        });
       });
     }
   };
   var handleReset9 = (_event, state) => {
     const profile2 = getActiveProfile(state);
+    profile2.typingCurrentIndex = 0;
+    profile2.typingEndTime = null;
     profile2.typingError = false;
     profile2.typingInput = "";
     profile2.typingMessage = null;
-    profile2.typingPending = false;
-    profile2.typingCurrentIndex = 0;
     profile2.typingMistakes = 0;
+    profile2.typingPending = false;
     profile2.typingStartTime = null;
-    profile2.typingEndTime = null;
   };
   var handleBack11 = (_event, state) => {
     setScreen(state, SCREENS.overview);
   };
   var handleRestart = (_event, state) => {
     const profile2 = getActiveProfile(state);
-    if (profile2.typingMessage) {
-      profile2.typingCurrentIndex = 0;
-      profile2.typingMistakes = 0;
-      profile2.typingStartTime = null;
-      profile2.typingEndTime = null;
-      profile2.typingComposing = null;
+    if (!profile2.typingMessage) {
+      return;
     }
+    profile2.typingComposing = null;
+    profile2.typingCurrentIndex = 0;
+    profile2.typingEndTime = null;
+    profile2.typingMistakes = 0;
+    profile2.typingStartTime = null;
+    requestAnimationFrame(() => {
+      handleTypingClick();
+      scrollToCurrentCharacter(state);
+    });
   };
   var handleKeyDown = (event, state) => {
     const profile2 = getActiveProfile(state);
@@ -3410,6 +3423,9 @@
     }
     const container = document.querySelector(".typing-text-container");
     const currentElement = document.querySelector(".typing-text .current");
+    if (!container || !currentElement) {
+      return;
+    }
     const containerRect = container.getBoundingClientRect();
     const elementRect = currentElement.getBoundingClientRect();
     const elementCenter = elementRect.top - containerRect.top + elementRect.height / 2;
@@ -3430,7 +3446,6 @@
   };
   var typing = (state) => {
     const profile2 = getActiveProfile(state);
-    console.log(profile2);
     return [
       node("p", [
         node("b", translate(state, "greeting")),
@@ -3458,7 +3473,7 @@
             node("select", {
               id: "typing-input_length",
               change: handleLengthChange
-            }, ["short", "medium", "long", "extra_long"].map((length) => node("option", {
+            }, TYPING_LENGTHS.map((length) => node("option", {
               value: length,
               selected: profile2.typingLength === length
             }, translate(state, "typing-length_" + length))))
@@ -3683,4 +3698,4 @@
   }
 })();
 
-//# debugId=02BDC2C8211FFF7464756E2164756E21
+//# debugId=BF4849D1EAE108E964756E2164756E21
