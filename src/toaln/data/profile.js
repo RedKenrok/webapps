@@ -46,7 +46,7 @@ export const PROFILE_TEMPLATE = {
   typingError: false,
   typingInput: '',
   typingLength: 'medium',
-  typingMessage: [],
+  typingMessage: '',
   typingMistakes: 0,
   typingPending: false,
   typingStartTime: null,

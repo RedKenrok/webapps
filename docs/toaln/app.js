@@ -1127,7 +1127,7 @@
     typingError: false,
     typingInput: "",
     typingLength: "medium",
-    typingMessage: [],
+    typingMessage: "",
     typingMistakes: 0,
     typingPending: false,
     typingStartTime: null,
@@ -3698,4 +3698,4 @@
   }
 })();
 
-//# debugId=AB2855D8C138FCE464756E2164756E21
+//# debugId=08D99FA116E1735F64756E2164756E21
