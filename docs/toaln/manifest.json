@@ -92,9 +92,14 @@
       "url": "./?screen=reading"
     },
     {
-      "name": "Answer questions",
-      "description": "You'll receive a short text along with a question to answer.",
-      "url": "./?screen=comprehension"
+      "name": "Rewrite texts",
+      "description": "You can let the LLM rewrite a text at your proficiency level.",
+      "url": "./?screen=rewrite"
+    },
+    {
+      "name": "Practise typing",
+      "description": "Improve your typing speed and accuracy.",
+      "url": "./?screen=typing"
     },
     {
       "name": "Learn words",
@@ -102,9 +107,9 @@
       "url": "./?screen=vocabulary"
     },
     {
-      "name": "Rewrite texts",
-      "description": "You can let the LLM rewrite a text into German at your proficiency level.",
-      "url": "./?screen=rewrite"
+      "name": "Answer questions",
+      "description": "You'll receive a short text along with a question to answer.",
+      "url": "./?screen=comprehension"
     },
     {
       "name": "Practise conversations",
@@ -120,7 +125,7 @@
     {
       "name": "Ask for clarification",
       "short_name": "Clarification",
-      "description": "Get explanations about German, such as a grammar rule like conjugations or cases.",
+      "description": "Get explanations, such as a grammar rule like conjugations or cases.",
       "url": "./?screen=clarification"
     }
   ]

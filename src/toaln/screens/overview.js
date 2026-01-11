@@ -9,6 +9,13 @@ import { generateProfileName } from '../data/profile.js'
 
 import { setScreen } from '../utilities/screen.js'
 
+const handleSwitchProfile = (
+  event,
+  state,
+) => {
+  state.activeProfileId = event.target.value
+}
+
 const handleClarification = (
   _event,
   state,
@@ -51,13 +58,6 @@ const handleStory = (
   setScreen(state, SCREENS.story)
 }
 
-const handleVocabulary = (
-  _event,
-  state,
-) => {
-  setScreen(state, SCREENS.vocabulary)
-}
-
 const handleTyping = (
   _event,
   state,
@@ -65,19 +65,18 @@ const handleTyping = (
   setScreen(state, SCREENS.typing)
 }
 
+const handleVocabulary = (
+  _event,
+  state,
+) => {
+  setScreen(state, SCREENS.vocabulary)
+}
+
 const handleOptions = (
   _event,
   state,
 ) => {
   setScreen(state, SCREENS.options)
-}
-
-const handleSwitchProfile = (
-  _event,
-  state,
-  profileId,
-) => {
-  state.activeProfileId = profileId
 }
 
 const handleMigrate = (
@@ -137,7 +136,7 @@ export const overview = (
         }, t(state, 'overview-current_profile')),
         n('select', {
           id: 'overview-select_profile',
-          change: (event) => handleSwitchProfile(event, state, event.target.value),
+          change: handleSwitchProfile,
         }, state.profiles.map(profile =>
           n('option', {
             selected: state.activeProfileId === profile.id ? 'selected' : false,

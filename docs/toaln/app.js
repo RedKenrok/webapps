@@ -2095,6 +2095,9 @@
   ];
 
   // src/toaln/screens/overview.js
+  var handleSwitchProfile2 = (event, state) => {
+    state.activeProfileId = event.target.value;
+  };
   var handleClarification = (_event, state) => {
     setScreen(state, SCREENS.clarification);
   };
@@ -2113,17 +2116,14 @@
   var handleStory = (_event, state) => {
     setScreen(state, SCREENS.story);
   };
-  var handleVocabulary = (_event, state) => {
-    setScreen(state, SCREENS.vocabulary);
-  };
   var handleTyping = (_event, state) => {
     setScreen(state, SCREENS.typing);
   };
+  var handleVocabulary = (_event, state) => {
+    setScreen(state, SCREENS.vocabulary);
+  };
   var handleOptions = (_event, state) => {
     setScreen(state, SCREENS.options);
-  };
-  var handleSwitchProfile2 = (_event, state, profileId) => {
-    state.activeProfileId = profileId;
   };
   var handleMigrate = (_event, state) => {
     setScreen(state, SCREENS.migrate);
@@ -2151,7 +2151,7 @@
       }, translate(state, "overview-current_profile")),
       node("select", {
         id: "overview-select_profile",
-        change: (event) => handleSwitchProfile2(event, state, event.target.value)
+        change: handleSwitchProfile2
       }, state.profiles.map((profile) => node("option", {
         selected: state.activeProfileId === profile.id ? "selected" : false,
         value: profile.id
@@ -3698,4 +3698,4 @@
   }
 })();
 
-//# debugId=1E7FEDABF70B87DE64756E2164756E21
+//# debugId=AB2855D8C138FCE464756E2164756E21
