@@ -1,0 +1,26 @@
+.profile-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.profile-item span {
+  flex-grow: 1;
+}
+
+.profile-item button {
+  flex-grow: 0;
+  max-width: 5.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-item button+button {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.profile-item button:has(+button) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}

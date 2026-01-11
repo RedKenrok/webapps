@@ -1,0 +1,20 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "@redkenrok/webapp-toaln",
+      "dependencies": {
+        "@doars/staark": "^1.7.15",
+        "@doars/vroagn": "^1.4.3",
+      },
+    },
+  },
+  "packages": {
+    "@doars/staark": ["@doars/staark@1.7.15", "", { "dependencies": { "@doars/staark-common": "^1.5.8" } }, "sha512-zkCaelhTScOobaWjPRKUoKP3+Q54KMWMJhsk7fLRzIodaVzW9+odICdhrWDdmJD/L0H9GgmGHOV5O+mJq21uAw=="],
+
+    "@doars/staark-common": ["@doars/staark-common@1.5.8", "", {}, "sha512-5vVxCG3GKrHmg2+WtAdCvbXyAWSzxoZYZtJ9k/QDtPd4pBWza0B/fEVqpeq7qLk2SwqcfmVxhJ+TmrFmcEW51w=="],
+
+    "@doars/vroagn": ["@doars/vroagn@1.4.3", "", {}, "sha512-Pf8Jb2WB9b9JsiBVDSSO2vcgogmeFgofnHnKENmSaluG3ZAU72SeDkgbUQpMY6AsEY2fnFaHhh+qyKXBBDMNVw=="],
+  }
+}

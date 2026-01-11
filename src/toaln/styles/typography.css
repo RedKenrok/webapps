@@ -1,0 +1,101 @@
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+label,
+li,
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+p:not(:first-child) {
+  margin-top: 1rem;
+}
+
+ul,
+ol {
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 28rem) {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    hyphens: auto;
+  }
+
+  label,
+  li,
+  p {
+    hyphens: auto;
+    text-align: justify;
+  }
+}
+
+::selection {
+  color: var(--background);
+  background-color: var(--foreground);
+}
+
+a {
+  color: var(--color-unvisited, blue);
+  text-decoration: underline;
+}
+
+a:active,
+a:focus,
+a:focus-within,
+a:hover,
+a::selection {
+  color: var(--background);
+  background-color: var(--color-unvisited, blue);
+}
+
+a:visited {
+  color: var(--color-visited, purple);
+}
+
+a:visited:active,
+a:visited:focus,
+a:visited:focus-within,
+a:visited:hover,
+a:visited::selection {
+  background-color: var(--color-visited, purple);
+  color: var(--background);
+}
+
+blockquote {
+  padding-left: 1rem;
+  margin-bottom: 1rem !important;
+  margin-top: 1rem !important;
+  border-width: 0px;
+  border-left-width: 1px;
+  border-color: currentColor;
+  border-style: solid;
+  margin: 0;
+}
+
+p:has(code) {
+  text-align: left;
+}
+
+.icon {
+  filter: grayscale(1);
+}

@@ -3,9 +3,9 @@
 cd "$(dirname "$0")"
 
 (
-  npm run develop
+  bun run develop
 ) & (
-  npm run serve
+  bun run serve
 )
 
 # Wait for all background processes to complete.

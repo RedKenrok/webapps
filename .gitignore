@@ -1,7 +1,10 @@
 .DS_STORE
 ._*
 
-node_modules/
 .env
+
+node_modules/
+
+.vscode/
 
 NOTES.md

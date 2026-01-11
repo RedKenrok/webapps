@@ -1,0 +1,24 @@
+.typing-input-hidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+}
+
+.typing-text {
+  outline: none;
+}
+
+.typing-text .completed,
+.typing-text .remaining {
+  color: var(--muted);
+}
+
+.typing-text .current {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}

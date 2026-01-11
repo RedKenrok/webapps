@@ -3,7 +3,7 @@
     "name": "Ron Dekker",
     "website": "https://rondekker.com"
   },
-  "name": "@redkenrok/webapp-toaln",
+  "name": "@redkenrok/webapps",
   "description": "",
   "keywords": [],
   "version": "0.0.0",
@@ -11,15 +11,12 @@
   "type": "module",
   "main": "src/app.js",
   "scripts": {
-    "develop": "NODE_ENV=development node bundle.js",
-    "build": "NODE_ENV=production node bundle.js",
-    "serve": "node serve.js"
-  },
-  "devDependencies": {
-    "esbuild": "^0.25.3"
+    "develop": "NODE_ENV=development bun ./config.bundle.js",
+    "build": "NODE_ENV=production bun ./config.bundle.js",
+    "serve": "bun ./helpers/serve.js ./docs/"
   },
   "dependencies": {
-    "@doars/staark": "^1.7.11",
+    "@doars/staark": "^1.7.15",
     "@doars/vroagn": "^1.4.3"
   }
 }

@@ -1,8 +1,15 @@
 # Apps
 
+- [Toaln](#toaln) - Language practice.
+
+### Future ideas
+
+- Story writing app;
+- Mathematics practice app;
+
 ## Toaln
 
-*Toaln* is a simple language learning app which utilises the power of Large Language Models to practise. Try the app out at [https://redkenrok.github.io/webapps/toaln/index.html](https://redkenrok.github.io/webapps/toaln/index.html). In order to use it you do need to specify [credentials for an LLM API](#llm-api-credentials).
+*Toaln* is a simple language learning app which utilities the power of Large Language Models to practice. Try the app out at [https://redkenrok.github.io/webapps/toaln/index.html](https://redkenrok.github.io/webapps/toaln/index.html). In order to use it you do need to specify [credentials for an LLM API](#llm-api-credentials).
 
 ### Future ideas
 
@@ -16,7 +23,7 @@
 | Generate a word and definition and the user has to write down an antonym or synonym.                                                                               | Too short and relies on the fact that the user already knows the antonym or synonym.         |
 | Generate a paragraph and the user has to fill in a missing sentence in between.                                                                                    | User will probably draw a blank on what to respond.                                          |
 | Generate a sentence with a mistake the user has to correct them.                                                                                                   | Nice role reversal, but the user might just not simply know enough to point out the mistake. |
-| Generate a word and definition and the user has to play a game of word association where they answer with a thematically similar word and definition of their own. | Already have a similar option for practising vocabulary. Perhaps this can be added later.    |
+| Generate a word and definition and the user has to play a game of word association where they answer with a thematically similar word and definition of their own. | Already have a similar option for practicing vocabulary. Perhaps this can be added later.    |
 
 # LLM API credentials
 

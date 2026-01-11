@@ -2,7 +2,7 @@
 
 cd "$(dirname "$0")"
 
-npm run build
+bun run build
 if [ $? -ne 0 ]; then
   echo "Failed to build."
   exit 1
