@@ -293,7 +293,6 @@ export const typing = (
       n('div', {
         class: 'messages',
       }, [
-
         ...c(
           !profile.typingPending
           && !profile.typingMessage,

@@ -547,10 +547,6 @@ p:has(code) {
   padding: 0;
 }
 
-.typing-text {
-  outline: none;
-}
-
 .typing-text-container {
   overflow-y: auto;
   scroll-behavior: smooth;
@@ -561,6 +557,15 @@ p:has(code) {
   display: block;
   padding-top: 1.5em;
   padding-bottom: 1.5em;
+}
+
+:focus + .typing-text-container {
+  outline: auto;
+  outline: medium auto invert;
+}
+
+.typing-text {
+  outline: none;
 }
 
 .typing-text .completed, .typing-text .remaining {

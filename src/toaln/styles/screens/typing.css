@@ -8,10 +8,6 @@
   padding: 0;
 }
 
-.typing-text {
-  outline: none;
-}
-
 .typing-text-container {
   max-height: 6em;
   overflow-y: auto;
@@ -22,6 +18,15 @@
   display: block;
   padding-top: 1.5em;
   padding-bottom: 1.5em;
+}
+
+*:focus+.typing-text-container {
+  outline: medium auto currentColor;
+  outline: medium auto invert;
+}
+
+.typing-text {
+  outline: none;
 }
 
 .typing-text .completed,

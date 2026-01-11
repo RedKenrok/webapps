@@ -1326,6 +1326,8 @@
       "setup-test_api_credentials": "Test key",
       "setup-api_credentials_untested": "Test the credentials before proceeding.",
       "setup-api_credentials_tested": 'The provided key works. Now you can choose which "Large Language Model" to use. Not sure what the differences are? No problem, we recommend selecting "{%preferredModel%}". That should be fine.',
+      "setup-api_model_advanced_settings": "Advanced model settings",
+      "setup-api_model_temperature-select": "What should the text variability be? Increasing the variability creates more creative and diverse output, but setting it too high can result in gibberish. The default value is 0.5.",
       "setup-outro": "Good luck and have fun!",
       "setup-next": "Start practising",
       "overview-current_profile": "With which profile would you like to practise?",
@@ -1346,6 +1348,8 @@
       "overview-rewrite-title": "Rewrite texts",
       "overview-story-description": "You'll take turns writing a story piece by piece.",
       "overview-story-title": "Write a story",
+      "overview-typing-description": "Improve your typing speed and accuracy in {%t:{%s:targetLanguage%}%}.",
+      "overview-typing-title": "Practise typing",
       "overview-vocabulary-description": "You'll receive a word together with its definition, you then respond with a with a sentence using that word.",
       "overview-vocabulary-title": "Learn words",
       "options-source_language": "Which language do you already know?",
@@ -1392,13 +1396,11 @@
       "typing-placeholder": "I want to type about...",
       "typing-results-summary": "The text consists of {%words%} words and {%characters%} characters. You typed the text in {%minutes%} minutes and {%seconds%} seconds, which means you typed at an average of {%wpm%} words per minute. You made {%mistakes%} mistakes, resulting in an accuracy of {%accuracy%}%.",
       "typing-restart": "Restart",
-      "typing-length-select": "Text length",
-      "typing-length-short": "Short (≈50 words)",
-      "typing-length-medium": "Medium (≈100 words)",
-      "typing-length-long": "Long (≈200 words)",
-      "typing-length-extra_long": "Extra long (≈400 words)",
-      "overview-typing-title": "Practise typing",
-      "overview-typing-description": "Improve your typing speed and accuracy in {%t:{%s:targetLanguage%}%}."
+      "typing-length_select": "Text length",
+      "typing-length_short": "Short (≈50 words)",
+      "typing-length_medium": "Medium (≈100 words)",
+      "typing-length_long": "Long (≈200 words)",
+      "typing-length_extra_long": "Extra long (≈400 words)"
     },
     [LOCALES.nld]: {
       [LOCALES.dan]: "Deens",
@@ -1504,6 +1506,8 @@
       "setup-test_api_credentials": "Sleutel testen",
       "setup-api_credentials_untested": "Test de gegevens eerst voordat je verder gaat.",
       "setup-api_credentials_tested": 'De opgegeven sleutel werkt, nu kan je nog kiezen uit welke "Large Language Model" je wilt gebruiken. Heb je geen idee wat de verschillen zijn? Geen probleem, we raden aan dat je "{%preferredModel%}" selecteert, daarmee komt het vast wel goed.',
+      "setup-api_model_advanced_settings": "Geadvanceerde model instellingen",
+      "setup-api_model_temperature-select": "Wat moet de variabiliteit zijn? Door de variabiliteit te verhogen, vergroot je de creativiteit en variatie in de gegenereerde teksten, maar als deze te hoog staat kan het resulteren in onzin. De standaardwaarde is 0.5.",
       "setup-outro": "Heel veel succes en plezier!",
       "setup-next": "Begin met oefenen",
       "overview-current_profile": "Met welk profiel wil je oefenen?",
@@ -1524,6 +1528,8 @@
       "overview-rewrite-title": "Teksten herschrijven",
       "overview-story-description": "Je gaat omste beurten stukje voor stukje een verhaal schrijven.",
       "overview-story-title": "Schrijf een verhaal",
+      "overview-typing-description": "Verbeter je typingsnelheid en nauwkeurigheid in het {%t:{%s:targetLanguage%}%}.",
+      "overview-typing-title": "Oefen typen",
       "overview-vocabulary-description": "Je krijgt een woord samen met de definitie ervan vervolgens schrijf je een zin dat dit woord gebruikt.",
       "overview-vocabulary-title": "Leer woorden",
       "options-source_language": "Welke taal ken je al?",
@@ -1574,9 +1580,7 @@
       "typing-length_short": "Kort (≈50 woorden)",
       "typing-length_medium": "Medium (≈100 woorden)",
       "typing-length_long": "Lang (≈200 woorden)",
-      "typing-length_extra_long": "Extra lang (≈400 woorden)",
-      "overview-typing-title": "Oefen typen",
-      "overview-typing-description": "Verbeter je typingsnelheid en nauwkeurigheid in het {%t:{%s:targetLanguage%}%}."
+      "typing-length_extra_long": "Extra lang (≈400 woorden)"
     }
   });
   var TRANSLATABLE_CODES = Object.keys(TRANSLATIONS);
@@ -3698,4 +3702,4 @@
   }
 })();
 
-//# debugId=08D99FA116E1735F64756E2164756E21
+//# debugId=B47D2BD9392C3F2664756E2164756E21
