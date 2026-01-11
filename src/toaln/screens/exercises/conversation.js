@@ -3,18 +3,18 @@ import {
   node as n,
 } from '@doars/staark'
 
-import { createMessage } from '../../shared/apis/apis.js'
+import { createMessage } from '../../../shared/apis/apis.js'
 
-import { getActiveProfile } from '../data/profile.js'
-import { SCREENS } from '../data/screens.js'
-import { translate as t } from '../data/translations.js'
+import { getActiveProfile } from '../../data/profile.js'
+import { SCREENS } from '../../data/screens.js'
+import { translate as t } from '../../data/translations.js'
 
 import {
   randomBool,
   randomItem,
-} from '../../shared/utilities/random.js'
-import { setScreen } from '../utilities/screen.js'
-import { onActivity } from '../utilities/streak.js'
+} from '../../../shared/utilities/random.js'
+import { setScreen } from '../../utilities/screen.js'
+import { onActivity } from '../../utilities/streak.js'
 
 const handleReply = (
   _event,

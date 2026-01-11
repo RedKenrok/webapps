@@ -2294,6 +2294,81 @@
     }, translate(state, "credits-link").replace("{%name%}", "Ron Dekker")))
   ];
 
+  // src/toaln/screens/profile.js
+  var handleTargetLanguage = (event, state) => {
+    const profile = getActiveProfile(state);
+    if (profile) {
+      profile.targetLanguage = event.target.selectedOptions[0].value;
+    }
+  };
+  var handleProficiencyLevel = (event, state) => {
+    const profile = getActiveProfile(state);
+    if (profile) {
+      profile.proficiencyLevel = event.target.selectedOptions[0].value;
+    }
+  };
+  var handleNewTopic = (event, state) => {
+    const profile = getActiveProfile(state);
+    if (profile && event.target.value) {
+      profile.topicsOfInterest.push(event.target.value);
+    }
+  };
+  var handleUpdateTopic = (event, state) => {
+    const index = Number.parseInt(event.target.getAttribute("data-index"));
+    const currentProfile = getActiveProfile(state);
+    if (!event.target.value) {
+      currentProfile.topicsOfInterest.splice(index, 1);
+    } else {
+      currentProfile.topicsOfInterest[index] = event.target.value;
+    }
+  };
+  var handleGoBack2 = (_event, state) => {
+    setScreen(state, SCREENS.options);
+  };
+  var profile = (state) => {
+    const currentProfile = getActiveProfile(state);
+    return [
+      node("b", translate(state, "greeting")),
+      node("label", {
+        for: "select_target_language"
+      }, translate(state, "profile-target_language")),
+      node("select", {
+        id: "select_target_language",
+        change: handleTargetLanguage
+      }, LOCALE_CODES.map((localeCode) => node("option", {
+        selected: currentProfile?.targetLanguage === localeCode ? "selected" : false,
+        value: localeCode
+      }, translate(state, localeCode)))),
+      node("label", {
+        for: "select_proficiency_level"
+      }, translate(state, "profile-proficiency_level")),
+      node("select", {
+        id: "select_proficiency_level",
+        change: handleProficiencyLevel
+      }, PROFICIENCY_LEVEL_CODES.map((proficiencyLevel) => node("option", {
+        selected: currentProfile?.proficiencyLevel === proficiencyLevel ? "selected" : false,
+        value: proficiencyLevel
+      }, translate(state, "proficiency_name-" + proficiencyLevel)))),
+      node("ul", translate(state, "proficiency_description-" + currentProfile?.proficiencyLevel).map((text) => node("li", text))),
+      node("label", {
+        for: "input_topics_of_interest"
+      }, translate(state, "profile-topics_of_interest")),
+      ...currentProfile?.topicsOfInterest?.map((topic, index) => node("input", {
+        "data-index": String(index),
+        keyup: handleUpdateTopic,
+        value: topic
+      })),
+      node("input", {
+        keyup: handleNewTopic,
+        id: "input_topics_of_interest"
+      }),
+      node("button", {
+        click: handleGoBack2,
+        type: "button"
+      }, translate(state, "button-go_back"))
+    ];
+  };
+
   // src/toaln/screens/setup.js
   var ensureProfileExists = (state) => {
     if (state.profiles.length === 0) {
@@ -2314,27 +2389,27 @@
       setLangAttribute(state);
     }
   };
-  var handleTargetLanguage = (event, state) => {
+  var handleTargetLanguage2 = (event, state) => {
     ensureProfileExists(state);
     const value = event.target.selectedOptions[0].value;
     if (!state.profiles[0].targetLanguage !== value) {
       state.profiles[0].targetLanguage = value;
     }
   };
-  var handleProficiencyLevel = (event, state) => {
+  var handleProficiencyLevel2 = (event, state) => {
     ensureProfileExists(state);
     const value = event.target.selectedOptions[0].value;
     if (state.profiles[0].proficiencyLevel !== value) {
       state.profiles[0].proficiencyLevel = value;
     }
   };
-  var handleNewTopic = (event, state) => {
+  var handleNewTopic2 = (event, state) => {
     ensureProfileExists(state);
     if (event.target.value) {
       state.profiles[0].topicsOfInterest.push(event.target.value);
     }
   };
-  var handleUpdateTopic = (event, state) => {
+  var handleUpdateTopic2 = (event, state) => {
     ensureProfileExists(state);
     const index = Number.parseInt(event.target.getAttribute("data-index"));
     if (!event.target.value) {
@@ -2403,7 +2478,7 @@
     }, translate(state, "setup-target_language")),
     node("select", {
       id: "select_target_language",
-      change: handleTargetLanguage
+      change: handleTargetLanguage2
     }, LOCALE_CODES.map((localeCode) => node("option", {
       selected: (state.profiles[0]?.targetLanguage || "eng") === localeCode ? "selected" : false,
       value: localeCode
@@ -2413,7 +2488,7 @@
     }, translate(state, "setup-proficiency_level")),
     node("select", {
       id: "select_proficiency_level",
-      change: handleProficiencyLevel
+      change: handleProficiencyLevel2
     }, PROFICIENCY_LEVEL_CODES.map((proficiencyLevel) => node("option", {
       selected: (state.profiles[0]?.proficiencyLevel || "a1") === proficiencyLevel ? "selected" : false,
       value: proficiencyLevel
@@ -2425,11 +2500,11 @@
     }, translate(state, "setup-topics_of_interest")),
     ...(state.profiles[0]?.topicsOfInterest || []).map((topic, index) => node("input", {
       "data-index": String(index),
-      keyup: handleUpdateTopic,
+      keyup: handleUpdateTopic2,
       value: topic
     })),
     node("input", {
-      keyup: handleNewTopic,
+      keyup: handleNewTopic2,
       id: "input_topics_of_interest"
     }),
     node("label", {
@@ -2510,19 +2585,6 @@
     }, translate(state, "setup-next"))
   ];
 
-  // src/shared/utilities/random.js
-  var randomBool = (odds) => {
-    odds = Math.abs(odds);
-    return Math.random() < 1 / odds;
-  };
-  var randomItem = (items) => {
-    if (!Array.isArray(items) || items.length === 0) {
-      return null;
-    }
-    const index = Math.floor(Math.random() * items.length);
-    return items[index];
-  };
-
   // src/toaln/utilities/streak.js
   var ONE_HOUR = 60 * 60 * 1000;
   var ONE_DAY = ONE_HOUR * 24;
@@ -2546,150 +2608,46 @@
     }
   };
 
-  // src/toaln/screens/conversation.js
-  var handleReply = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.conversationPending && profile.conversationInput && profile.conversationInput.trim().length > 0) {
-      profile.conversationError = false;
-      profile.conversationPending = true;
-      profile.conversationMessages.push({
-        role: "user",
-        content: profile.conversationInput.trim()
-      });
-      profile.conversationInput = "";
-      createMessage6(state, profile.conversationMessages, translate(state, "prompt-context"), translate(state, "prompt-conversation-follow_up")).then(([error, _response, result]) => {
-        profile.conversationPending = false;
-        if (error) {
-          profile.conversationError = error.toString();
-          const message = profile.conversationMessages.pop();
-          profile.conversationInput = message.content;
-          return;
-        }
-        if (result.content.trim().endsWith("STOP")) {
-          profile.conversationStopped = true;
-        }
-        profile.conversationMessages.push(result);
-        state.statisticConversationActivity++;
-        onActivity(state);
-      });
-    }
-  };
-  var handleGenerate = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.conversationPending) {
-      profile.conversationError = false;
-      profile.conversationMessages = [];
-      profile.conversationPending = true;
-      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-conversation") + (randomBool(10) ? translate(state, "prompt-topic").replace("{%topic%}", randomItem(profile.topicsOfInterest.filter((topic) => topic))) : "")).then(([error, _response, result]) => {
-        profile.conversationPending = false;
-        if (error) {
-          profile.conversationError = error.toString();
-          return;
-        }
-        profile.conversationMessages.push(result);
-      });
-    }
-  };
-  var handleReset2 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    profile.conversationError = false;
-    profile.conversationMessages = [];
-    profile.conversationPending = false;
-    profile.conversationStopped = false;
-  };
-  var handleBack4 = (_event, state) => {
-    setScreen(state, SCREENS.overview);
-  };
-  var handleInput = (event, state) => {
-    const profile = getActiveProfile(state);
-    profile.conversationInput = event.target.value;
-  };
-  var conversation = (state) => {
-    const profile = getActiveProfile(state);
-    return [
-      node("p", [
-        node("b", translate(state, "greeting")),
-        node("br"),
-        translate(state, "conversation-intro")
-      ]),
-      ...conditional(profile.conversationMessages && profile.conversationMessages.length > 0, node("div", {
-        class: "messages"
-      }, profile.conversationMessages.map((message) => node("p", {
-        class: "message-" + message?.role
-      }, message?.content?.split(`
-`)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))))),
-      ...conditional(profile.conversationError, node("p", profile.conversationError)),
-      ...conditional(profile.conversationPending, node("p", {
-        class: "pending"
-      }), conditional(profile.conversationMessages && profile.conversationMessages.length > 0, node("textarea", {
-        class: "message-user",
-        id: "input-question",
-        keyup: handleInput
-      }, profile.conversationInput))),
-      node("div", {
-        class: "row reverse"
-      }, [
-        ...conditional(profile.conversationMessages && profile.conversationMessages.length > 0 && !profile.conversationStopped, node("button", {
-          disabled: profile.conversationPending || !profile.conversationInput || profile.conversationInput.trim().length === 0,
-          type: "button",
-          click: handleReply
-        }, translate(state, "button-reply")), node("button", {
-          disabled: profile.conversationPending,
-          type: "button",
-          click: handleGenerate
-        }, translate(state, "button-generate"))),
-        ...conditional(profile.conversationPending || profile.conversationMessages && profile.conversationMessages.length > 0, node("button", {
-          click: handleReset2,
-          type: "button"
-        }, translate(state, "button-reset"))),
-        node("button", {
-          click: handleBack4,
-          type: "button"
-        }, translate(state, "button-go_back"))
-      ])
-    ];
-  };
-
-  // src/toaln/screens/clarification.js
+  // src/toaln/screens/exercises/clarification.js
   var handleAsk = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.clarificationPending && profile.clarificationInput && profile.clarificationInput.trim().length > 0) {
-      profile.clarificationError = false;
-      profile.clarificationPending = true;
-      profile.clarificationMessages.push({
+    const profile2 = getActiveProfile(state);
+    if (!profile2.clarificationPending && profile2.clarificationInput && profile2.clarificationInput.trim().length > 0) {
+      profile2.clarificationError = false;
+      profile2.clarificationPending = true;
+      profile2.clarificationMessages.push({
         role: "user",
-        content: profile.clarificationInput.trim()
+        content: profile2.clarificationInput.trim()
       });
-      profile.clarificationInput = "";
-      createMessage6(state, profile.clarificationMessages, translate(state, "prompt-context"), translate(state, "prompt-clarification")).then(([error, _response, result]) => {
-        profile.clarificationPending = false;
+      profile2.clarificationInput = "";
+      createMessage6(state, profile2.clarificationMessages, translate(state, "prompt-context"), translate(state, "prompt-clarification")).then(([error, _response, result]) => {
+        profile2.clarificationPending = false;
         if (error) {
-          profile.clarificationError = error.toString();
-          const message = profile.clarificationMessages.pop();
-          profile.clarificationInput = message.content;
+          profile2.clarificationError = error.toString();
+          const message = profile2.clarificationMessages.pop();
+          profile2.clarificationInput = message.content;
           return;
         }
-        profile.clarificationMessages.push(result);
+        profile2.clarificationMessages.push(result);
         state.statisticClarificationActivity++;
         onActivity(state);
       });
     }
   };
-  var handleInput2 = (event, state) => {
-    const profile = getActiveProfile(state);
-    profile.clarificationInput = event.target.value;
+  var handleInput = (event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.clarificationInput = event.target.value;
   };
-  var handleReset3 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    profile.clarificationError = false;
-    profile.clarificationMessages = [];
-    profile.clarificationPending = false;
+  var handleReset2 = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.clarificationError = false;
+    profile2.clarificationMessages = [];
+    profile2.clarificationPending = false;
   };
-  var handleBack5 = (_event, state) => {
+  var handleBack4 = (_event, state) => {
     setScreen(state, SCREENS.overview);
   };
   var clarification = (state) => {
-    const profile = getActiveProfile(state);
+    const profile2 = getActiveProfile(state);
     return [
       node("p", [
         node("b", translate(state, "greeting")),
@@ -2698,131 +2656,248 @@
           for: "input-question"
         }, translate(state, "clarification-intro"))
       ]),
-      ...conditional(profile.clarificationMessages && profile.clarificationMessages.length > 0, node("div", {
+      ...conditional(profile2.clarificationMessages && profile2.clarificationMessages.length > 0, node("div", {
         class: "messages"
-      }, profile.clarificationMessages.map((message) => node("p", {
+      }, profile2.clarificationMessages.map((message) => node("p", {
         class: "message-" + message?.role
       }, message?.content?.split(`
 `)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))))),
-      ...conditional(profile.clarificationError, node("p", profile.clarificationError)),
-      ...conditional(profile.clarificationPending, node("p", {
+      ...conditional(profile2.clarificationError, node("p", profile2.clarificationError)),
+      ...conditional(profile2.clarificationPending, node("p", {
         class: "pending"
       }), node("textarea", {
         class: "message-user",
         id: "input-question",
         placeholder: translate(state, "clarification-placeholder"),
-        keyup: handleInput2
-      }, profile.clarificationInput)),
+        keyup: handleInput
+      }, profile2.clarificationInput)),
       node("div", {
         class: "row reverse"
       }, [
         node("button", {
-          disabled: profile.clarificationPending || !profile.clarificationInput || profile.clarificationInput.trim().length === 0,
+          disabled: profile2.clarificationPending || !profile2.clarificationInput || profile2.clarificationInput.trim().length === 0,
           type: "button",
           click: handleAsk
         }, translate(state, "button-ask")),
-        ...conditional(profile.clarificationPending || profile.clarificationMessages && profile.clarificationMessages.length > 0, node("button", {
+        ...conditional(profile2.clarificationPending || profile2.clarificationMessages && profile2.clarificationMessages.length > 0, node("button", {
           type: "button",
-          click: handleReset3
+          click: handleReset2
         }, translate(state, "button-reset"))),
         node("button", {
           type: "button",
-          click: handleBack5
+          click: handleBack4
         }, translate(state, "button-go_back"))
       ])
     ];
   };
 
-  // src/toaln/screens/comprehension.js
-  var handleInput3 = (event, state) => {
-    const profile = getActiveProfile(state);
-    profile.comprehensionInput = event.target.value;
+  // src/shared/utilities/random.js
+  var randomBool = (odds) => {
+    odds = Math.abs(odds);
+    return Math.random() < 1 / odds;
+  };
+  var randomItem = (items) => {
+    if (!Array.isArray(items) || items.length === 0) {
+      return null;
+    }
+    const index = Math.floor(Math.random() * items.length);
+    return items[index];
+  };
+
+  // src/toaln/screens/exercises/comprehension.js
+  var handleInput2 = (event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.comprehensionInput = event.target.value;
   };
   var handleAnswer = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.comprehensionPending && profile.comprehensionInput && profile.comprehensionInput.trim().length > 0) {
-      profile.comprehensionError = false;
-      profile.comprehensionPending = true;
-      profile.comprehensionMessages.push({
+    const profile2 = getActiveProfile(state);
+    if (!profile2.comprehensionPending && profile2.comprehensionInput && profile2.comprehensionInput.trim().length > 0) {
+      profile2.comprehensionError = false;
+      profile2.comprehensionPending = true;
+      profile2.comprehensionMessages.push({
         role: "user",
-        content: profile.comprehensionInput.trim()
+        content: profile2.comprehensionInput.trim()
       });
-      profile.comprehensionInput = "";
-      createMessage6(state, profile.comprehensionMessages, translate(state, "prompt-context"), translate(state, "prompt-comprehension-follow_up")).then(([error, _response, result]) => {
-        profile.comprehensionPending = false;
+      profile2.comprehensionInput = "";
+      createMessage6(state, profile2.comprehensionMessages, translate(state, "prompt-context"), translate(state, "prompt-comprehension-follow_up")).then(([error, _response, result]) => {
+        profile2.comprehensionPending = false;
         if (error) {
-          profile.comprehensionError = error.toString();
-          const message = profile.comprehensionMessages.pop();
-          profile.comprehensionInput = message.content;
+          profile2.comprehensionError = error.toString();
+          const message = profile2.comprehensionMessages.pop();
+          profile2.comprehensionInput = message.content;
           return;
         }
-        profile.comprehensionMessages.push(result);
+        profile2.comprehensionMessages.push(result);
         state.statisticComprehensionActivity++;
         onActivity(state);
       });
     }
   };
-  var handleGenerate2 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.comprehensionPending) {
-      profile.comprehensionError = false;
-      profile.comprehensionMessages = [];
-      profile.comprehensionPending = true;
-      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-comprehension") + (randomBool(10) ? translate(state, "prompt-topic").replace("{%topic%}", randomItem(profile.topicsOfInterest.filter((topic) => topic))) : "")).then(([error, _response, result]) => {
-        profile.comprehensionPending = false;
+  var handleGenerate = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    if (!profile2.comprehensionPending) {
+      profile2.comprehensionError = false;
+      profile2.comprehensionMessages = [];
+      profile2.comprehensionPending = true;
+      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-comprehension") + (randomBool(10) ? translate(state, "prompt-topic").replace("{%topic%}", randomItem(profile2.topicsOfInterest.filter((topic) => topic))) : "")).then(([error, _response, result]) => {
+        profile2.comprehensionPending = false;
         if (error) {
-          profile.comprehensionError = error.toString();
+          profile2.comprehensionError = error.toString();
           return;
         }
-        profile.comprehensionMessages.push(result);
+        profile2.comprehensionMessages.push(result);
       });
     }
   };
-  var handleReset4 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    profile.comprehensionError = false;
-    profile.comprehensionInput = "";
-    profile.comprehensionMessages = [];
-    profile.comprehensionPending = false;
+  var handleReset3 = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.comprehensionError = false;
+    profile2.comprehensionInput = "";
+    profile2.comprehensionMessages = [];
+    profile2.comprehensionPending = false;
   };
-  var handleBack6 = (_event, state) => {
+  var handleBack5 = (_event, state) => {
     setScreen(state, SCREENS.overview);
   };
   var comprehension = (state) => {
-    const profile = getActiveProfile(state);
+    const profile2 = getActiveProfile(state);
     return [
       node("p", [
         node("b", translate(state, "greeting")),
         node("br"),
         translate(state, "comprehension-intro")
       ]),
-      ...conditional(profile.comprehensionMessages && profile.comprehensionMessages.length > 0, node("div", {
+      ...conditional(profile2.comprehensionMessages && profile2.comprehensionMessages.length > 0, node("div", {
         class: "messages"
-      }, profile.comprehensionMessages.map((message) => node("p", {
+      }, profile2.comprehensionMessages.map((message) => node("p", {
         class: "message-" + message?.role
       }, message?.content?.split(`
 `)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))))),
-      ...conditional(profile.comprehensionError, node("p", profile.comprehensionError)),
-      ...conditional(profile.comprehensionPending, node("p", {
+      ...conditional(profile2.comprehensionError, node("p", profile2.comprehensionError)),
+      ...conditional(profile2.comprehensionPending, node("p", {
         class: "pending"
-      }), conditional(profile.comprehensionMessages && profile.comprehensionMessages.length > 0 && profile.comprehensionMessages.length < 3, node("textarea", {
+      }), conditional(profile2.comprehensionMessages && profile2.comprehensionMessages.length > 0 && profile2.comprehensionMessages.length < 3, node("textarea", {
         class: "message-user",
         id: "input-question",
-        keyup: handleInput3
-      }, profile.comprehensionInput))),
+        keyup: handleInput2
+      }, profile2.comprehensionInput))),
       node("div", {
         class: "row reverse"
       }, [
-        ...conditional(profile.comprehensionMessages && profile.comprehensionMessages.length > 0 && profile.comprehensionMessages.length < 3, node("button", {
-          disabled: profile.comprehensionPending || !profile.comprehensionInput || profile.comprehensionInput.trim().length === 0,
+        ...conditional(profile2.comprehensionMessages && profile2.comprehensionMessages.length > 0 && profile2.comprehensionMessages.length < 3, node("button", {
+          disabled: profile2.comprehensionPending || !profile2.comprehensionInput || profile2.comprehensionInput.trim().length === 0,
           type: "button",
           click: handleAnswer
         }, translate(state, "button-answer")), node("button", {
-          disabled: profile.comprehensionPending,
+          disabled: profile2.comprehensionPending,
+          type: "button",
+          click: handleGenerate
+        }, translate(state, "button-generate"))),
+        ...conditional(profile2.comprehensionPending || profile2.comprehensionMessages && profile2.comprehensionMessages.length > 0, node("button", {
+          click: handleReset3,
+          type: "button"
+        }, translate(state, "button-reset"))),
+        node("button", {
+          click: handleBack5,
+          type: "button"
+        }, translate(state, "button-go_back"))
+      ])
+    ];
+  };
+
+  // src/toaln/screens/exercises/conversation.js
+  var handleReply = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    if (!profile2.conversationPending && profile2.conversationInput && profile2.conversationInput.trim().length > 0) {
+      profile2.conversationError = false;
+      profile2.conversationPending = true;
+      profile2.conversationMessages.push({
+        role: "user",
+        content: profile2.conversationInput.trim()
+      });
+      profile2.conversationInput = "";
+      createMessage6(state, profile2.conversationMessages, translate(state, "prompt-context"), translate(state, "prompt-conversation-follow_up")).then(([error, _response, result]) => {
+        profile2.conversationPending = false;
+        if (error) {
+          profile2.conversationError = error.toString();
+          const message = profile2.conversationMessages.pop();
+          profile2.conversationInput = message.content;
+          return;
+        }
+        if (result.content.trim().endsWith("STOP")) {
+          profile2.conversationStopped = true;
+        }
+        profile2.conversationMessages.push(result);
+        state.statisticConversationActivity++;
+        onActivity(state);
+      });
+    }
+  };
+  var handleGenerate2 = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    if (!profile2.conversationPending) {
+      profile2.conversationError = false;
+      profile2.conversationMessages = [];
+      profile2.conversationPending = true;
+      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-conversation") + (randomBool(10) ? translate(state, "prompt-topic").replace("{%topic%}", randomItem(profile2.topicsOfInterest.filter((topic) => topic))) : "")).then(([error, _response, result]) => {
+        profile2.conversationPending = false;
+        if (error) {
+          profile2.conversationError = error.toString();
+          return;
+        }
+        profile2.conversationMessages.push(result);
+      });
+    }
+  };
+  var handleReset4 = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.conversationError = false;
+    profile2.conversationMessages = [];
+    profile2.conversationPending = false;
+    profile2.conversationStopped = false;
+  };
+  var handleBack6 = (_event, state) => {
+    setScreen(state, SCREENS.overview);
+  };
+  var handleInput3 = (event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.conversationInput = event.target.value;
+  };
+  var conversation = (state) => {
+    const profile2 = getActiveProfile(state);
+    return [
+      node("p", [
+        node("b", translate(state, "greeting")),
+        node("br"),
+        translate(state, "conversation-intro")
+      ]),
+      ...conditional(profile2.conversationMessages && profile2.conversationMessages.length > 0, node("div", {
+        class: "messages"
+      }, profile2.conversationMessages.map((message) => node("p", {
+        class: "message-" + message?.role
+      }, message?.content?.split(`
+`)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))))),
+      ...conditional(profile2.conversationError, node("p", profile2.conversationError)),
+      ...conditional(profile2.conversationPending, node("p", {
+        class: "pending"
+      }), conditional(profile2.conversationMessages && profile2.conversationMessages.length > 0, node("textarea", {
+        class: "message-user",
+        id: "input-question",
+        keyup: handleInput3
+      }, profile2.conversationInput))),
+      node("div", {
+        class: "row reverse"
+      }, [
+        ...conditional(profile2.conversationMessages && profile2.conversationMessages.length > 0 && !profile2.conversationStopped, node("button", {
+          disabled: profile2.conversationPending || !profile2.conversationInput || profile2.conversationInput.trim().length === 0,
+          type: "button",
+          click: handleReply
+        }, translate(state, "button-reply")), node("button", {
+          disabled: profile2.conversationPending,
           type: "button",
           click: handleGenerate2
         }, translate(state, "button-generate"))),
-        ...conditional(profile.comprehensionPending || profile.comprehensionMessages && profile.comprehensionMessages.length > 0, node("button", {
+        ...conditional(profile2.conversationPending || profile2.conversationMessages && profile2.conversationMessages.length > 0, node("button", {
           click: handleReset4,
           type: "button"
         }, translate(state, "button-reset"))),
@@ -2834,49 +2909,49 @@
     ];
   };
 
-  // src/toaln/screens/reading.js
+  // src/toaln/screens/exercises/reading.js
   var handleInput4 = (event, state) => {
-    const profile = getActiveProfile(state);
-    profile.readingInput = event.target.value;
+    const profile2 = getActiveProfile(state);
+    profile2.readingInput = event.target.value;
   };
   var handleGenerate3 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.readingPending) {
-      profile.readingError = false;
-      profile.readingMessages = [];
-      profile.readingPending = true;
+    const profile2 = getActiveProfile(state);
+    if (!profile2.readingPending) {
+      profile2.readingError = false;
+      profile2.readingMessages = [];
+      profile2.readingPending = true;
       let instructions = translate(state, "prompt-reading");
-      if (profile.readingInput && profile.readingInput.trim().length > 0) {
-        profile.readingMessages.push({
+      if (profile2.readingInput && profile2.readingInput.trim().length > 0) {
+        profile2.readingMessages.push({
           role: "user",
-          content: profile.readingInput.trim()
+          content: profile2.readingInput.trim()
         });
         instructions += " " + translate(state, "prompt-reading-topic");
       }
-      createMessage6(state, profile.readingMessages, translate(state, "prompt-context"), instructions).then(([error, _response, result]) => {
-        profile.readingPending = false;
+      createMessage6(state, profile2.readingMessages, translate(state, "prompt-context"), instructions).then(([error, _response, result]) => {
+        profile2.readingPending = false;
         if (error) {
-          profile.readingError = error.toString();
+          profile2.readingError = error.toString();
           return;
         }
-        profile.readingMessages.push(result);
+        profile2.readingMessages.push(result);
         state.statisticReadingActivity++;
         onActivity(state);
       });
     }
   };
   var handleReset5 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    profile.readingError = false;
-    profile.readingInput = "";
-    profile.readingMessages = [];
-    profile.readingPending = false;
+    const profile2 = getActiveProfile(state);
+    profile2.readingError = false;
+    profile2.readingInput = "";
+    profile2.readingMessages = [];
+    profile2.readingPending = false;
   };
   var handleBack7 = (_event, state) => {
     setScreen(state, SCREENS.overview);
   };
   var reading = (state) => {
-    const profile = getActiveProfile(state);
+    const profile2 = getActiveProfile(state);
     return [
       node("p", [
         node("b", translate(state, "greeting")),
@@ -2888,30 +2963,30 @@
       node("div", {
         class: "messages"
       }, [
-        ...conditional(profile.readingMessages && profile.readingMessages?.length > 0, profile.readingMessages?.map((message) => node("p", {
+        ...conditional(profile2.readingMessages && profile2.readingMessages?.length > 0, profile2.readingMessages?.map((message) => node("p", {
           class: "message-" + message?.role
         }, message?.content?.split(`
 `)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))), node("textarea", {
           class: "message-user",
-          disabled: profile.readingMessages?.length > 0,
+          disabled: profile2.readingMessages?.length > 0,
           id: "input-topic",
           input: handleInput4,
           placeholder: translate(state, "reading-placeholder")
-        }, profile.readingInput || ""))
+        }, profile2.readingInput || ""))
       ]),
-      ...conditional(profile.readingError, node("p", profile.readingError)),
-      ...conditional(profile.readingPending, node("p", {
+      ...conditional(profile2.readingError, node("p", profile2.readingError)),
+      ...conditional(profile2.readingPending, node("p", {
         class: "pending"
       })),
       node("div", {
         class: "row reverse"
       }, [
-        ...conditional(profile.readingPending || profile.readingMessages && profile.readingMessages?.length === 0, node("button", {
+        ...conditional(profile2.readingPending || profile2.readingMessages && profile2.readingMessages?.length === 0, node("button", {
           click: handleGenerate3,
-          disabled: profile.readingPending,
+          disabled: profile2.readingPending,
           type: "button"
         }, translate(state, "button-generate"))),
-        ...conditional(profile.readingPending || profile.readingMessages && profile.readingMessages?.length > 0, node("button", {
+        ...conditional(profile2.readingPending || profile2.readingMessages && profile2.readingMessages?.length > 0, node("button", {
           type: "button",
           click: handleReset5
         }, translate(state, "button-reset"))),
@@ -2923,44 +2998,44 @@
     ];
   };
 
-  // src/toaln/screens/rewrite.js
+  // src/toaln/screens/exercises/rewrite.js
   var handleInput5 = (event, state) => {
-    const profile = getActiveProfile(state);
-    profile.rewriteInput = event.target.value;
+    const profile2 = getActiveProfile(state);
+    profile2.rewriteInput = event.target.value;
   };
   var handleRewrite2 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.rewritePending) {
-      profile.rewriteError = false;
-      profile.rewriteMessages = [{
+    const profile2 = getActiveProfile(state);
+    if (!profile2.rewritePending) {
+      profile2.rewriteError = false;
+      profile2.rewriteMessages = [{
         role: "user",
-        content: profile.rewriteInput.trim()
+        content: profile2.rewriteInput.trim()
       }];
-      profile.rewritePending = true;
-      createMessage6(state, profile.rewriteMessages, translate(state, "prompt-context"), translate(state, "prompt-rewrite")).then(([error, _response, result]) => {
-        profile.rewritePending = false;
+      profile2.rewritePending = true;
+      createMessage6(state, profile2.rewriteMessages, translate(state, "prompt-context"), translate(state, "prompt-rewrite")).then(([error, _response, result]) => {
+        profile2.rewritePending = false;
         if (error) {
-          profile.rewriteError = error.toString();
+          profile2.rewriteError = error.toString();
           return;
         }
-        profile.rewriteMessages.push(result);
+        profile2.rewriteMessages.push(result);
         state.statisticRewriteActivity++;
         onActivity(state);
       });
     }
   };
   var handleReset6 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    profile.rewriteError = false;
-    profile.rewriteInput = "";
-    profile.rewriteMessages = [];
-    profile.rewritePending = false;
+    const profile2 = getActiveProfile(state);
+    profile2.rewriteError = false;
+    profile2.rewriteInput = "";
+    profile2.rewriteMessages = [];
+    profile2.rewritePending = false;
   };
   var handleBack8 = (_event, state) => {
     setScreen(state, SCREENS.overview);
   };
   var rewrite = (state) => {
-    const profile = getActiveProfile(state);
+    const profile2 = getActiveProfile(state);
     return [
       node("p", [
         node("b", translate(state, "greeting")),
@@ -2972,30 +3047,30 @@
       node("div", {
         class: "messages"
       }, [
-        ...conditional(profile.rewriteMessages && profile.rewriteMessages.length > 0, profile.rewriteMessages.map((message) => node("p", {
+        ...conditional(profile2.rewriteMessages && profile2.rewriteMessages.length > 0, profile2.rewriteMessages.map((message) => node("p", {
           class: "message-" + message.role
         }, message.content.split(`
 `).flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))), node("textarea", {
           class: "message-user",
-          disabled: profile.rewriteMessages && profile.rewriteMessages.length > 0,
+          disabled: profile2.rewriteMessages && profile2.rewriteMessages.length > 0,
           id: "input-text",
           input: handleInput5,
           placeholder: translate(state, "rewrite-placeholder")
-        }, profile.rewriteInput))
+        }, profile2.rewriteInput))
       ]),
-      ...conditional(profile.rewriteError, node("p", profile.rewriteError)),
-      ...conditional(profile.rewritePending, node("p", {
+      ...conditional(profile2.rewriteError, node("p", profile2.rewriteError)),
+      ...conditional(profile2.rewritePending, node("p", {
         class: "pending"
       })),
       node("div", {
         class: "row reverse"
       }, [
-        ...conditional(profile.rewritePending || profile.rewriteMessages && profile.rewriteMessages.length === 0, node("button", {
+        ...conditional(profile2.rewritePending || profile2.rewriteMessages && profile2.rewriteMessages.length === 0, node("button", {
           click: handleRewrite2,
-          disabled: profile.rewritePending || profile.rewriteInput.trim().length === 0,
+          disabled: profile2.rewritePending || profile2.rewriteInput.trim().length === 0,
           type: "button"
         }, translate(state, "button-rewrite"))),
-        ...conditional(profile.rewritePending || profile.rewriteMessages && profile.rewriteMessages.length > 0, node("button", {
+        ...conditional(profile2.rewritePending || profile2.rewriteMessages && profile2.rewriteMessages.length > 0, node("button", {
           type: "button",
           click: handleReset6
         }, translate(state, "button-reset"))),
@@ -3007,99 +3082,99 @@
     ];
   };
 
-  // src/toaln/screens/story.js
+  // src/toaln/screens/exercises/story.js
   var handleInput6 = (event, state) => {
-    const profile = getActiveProfile(state);
-    profile.storyInput = event.target.value;
+    const profile2 = getActiveProfile(state);
+    profile2.storyInput = event.target.value;
   };
   var handleReply2 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.storyPending && profile.storyInput && profile.storyInput.trim().length > 0) {
-      profile.storyError = false;
-      profile.storyPending = true;
-      profile.storyMessages.push({
+    const profile2 = getActiveProfile(state);
+    if (!profile2.storyPending && profile2.storyInput && profile2.storyInput.trim().length > 0) {
+      profile2.storyError = false;
+      profile2.storyPending = true;
+      profile2.storyMessages.push({
         role: "user",
-        content: profile.storyInput.trim()
+        content: profile2.storyInput.trim()
       });
-      profile.storyInput = "";
-      createMessage6(state, profile.storyMessages, translate(state, "prompt-context"), translate(state, "prompt-story-follow_up")).then(([error, _response, result]) => {
-        profile.storyPending = false;
+      profile2.storyInput = "";
+      createMessage6(state, profile2.storyMessages, translate(state, "prompt-context"), translate(state, "prompt-story-follow_up")).then(([error, _response, result]) => {
+        profile2.storyPending = false;
         if (error) {
-          profile.storyError = error.toString();
-          const message = profile.storyMessages.pop();
-          profile.storyInput = message.content;
+          profile2.storyError = error.toString();
+          const message = profile2.storyMessages.pop();
+          profile2.storyInput = message.content;
           return;
         }
         if (result.content.endsWith("STOP")) {
-          profile.storyStopped = true;
+          profile2.storyStopped = true;
         }
-        profile.storyMessages.push(result);
+        profile2.storyMessages.push(result);
         state.statisticStoryActivity++;
         onActivity(state);
       });
     }
   };
   var handleGenerate4 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.storyPending) {
-      profile.storyError = false;
-      profile.storyMessages = [];
-      profile.storyPending = true;
-      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-story") + (randomBool(10) ? translate(state, "prompt-topic").replace("{%topic%}", randomItem(profile.topicsOfInterest.filter((topic) => topic))) : "")).then(([error, _response, result]) => {
-        profile.storyPending = false;
+    const profile2 = getActiveProfile(state);
+    if (!profile2.storyPending) {
+      profile2.storyError = false;
+      profile2.storyMessages = [];
+      profile2.storyPending = true;
+      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-story") + (randomBool(10) ? translate(state, "prompt-topic").replace("{%topic%}", randomItem(profile2.topicsOfInterest.filter((topic) => topic))) : "")).then(([error, _response, result]) => {
+        profile2.storyPending = false;
         if (error) {
-          profile.storyError = error.toString();
+          profile2.storyError = error.toString();
           return;
         }
-        profile.storyMessages.push(result);
+        profile2.storyMessages.push(result);
       });
     }
   };
   var handleReset7 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    profile.storyError = false;
-    profile.storyMessages = [];
-    profile.storyPending = false;
-    profile.storyStopped = false;
+    const profile2 = getActiveProfile(state);
+    profile2.storyError = false;
+    profile2.storyMessages = [];
+    profile2.storyPending = false;
+    profile2.storyStopped = false;
   };
   var handleBack9 = (_event, state) => {
     setScreen(state, SCREENS.overview);
   };
   var story = (state) => {
-    const profile = getActiveProfile(state);
+    const profile2 = getActiveProfile(state);
     return [
       node("p", [
         node("b", translate(state, "greeting")),
         node("br"),
         translate(state, "story-intro")
       ]),
-      ...conditional(profile.storyMessages && profile.storyMessages.length > 0, node("div", {
+      ...conditional(profile2.storyMessages && profile2.storyMessages.length > 0, node("div", {
         class: "messages"
-      }, profile.storyMessages.map((message) => node("p", {
+      }, profile2.storyMessages.map((message) => node("p", {
         class: "message-" + message?.role
       }, message?.content?.split(`
 `)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))))),
-      ...conditional(profile.storyError, node("p", profile.storyError)),
-      ...conditional(profile.storyPending, node("p", {
+      ...conditional(profile2.storyError, node("p", profile2.storyError)),
+      ...conditional(profile2.storyPending, node("p", {
         class: "pending"
-      }), conditional(profile.storyMessages && profile.storyMessages.length > 0, node("textarea", {
+      }), conditional(profile2.storyMessages && profile2.storyMessages.length > 0, node("textarea", {
         class: "message-user",
         id: "input-question",
         keyup: handleInput6
-      }, profile.storyInput))),
+      }, profile2.storyInput))),
       node("div", {
         class: "row reverse"
       }, [
-        ...conditional(profile.storyMessages && profile.storyMessages.length > 0 && !profile.storyStopped, node("button", {
-          disabled: profile.storyPending || !profile.storyInput || profile.storyInput.trim().length === 0,
+        ...conditional(profile2.storyMessages && profile2.storyMessages.length > 0 && !profile2.storyStopped, node("button", {
+          disabled: profile2.storyPending || !profile2.storyInput || profile2.storyInput.trim().length === 0,
           type: "button",
           click: handleReply2
         }, translate(state, "button-reply")), node("button", {
-          disabled: profile.storyPending,
+          disabled: profile2.storyPending,
           type: "button",
           click: handleGenerate4
         }, translate(state, "button-generate"))),
-        ...conditional(profile.storyPending || profile.storyMessages && profile.storyMessages.length > 0, node("button", {
+        ...conditional(profile2.storyPending || profile2.storyMessages && profile2.storyMessages.length > 0, node("button", {
           click: handleReset7,
           type: "button"
         }, translate(state, "button-reset"))),
@@ -3111,189 +3186,14 @@
     ];
   };
 
-  // src/toaln/screens/vocabulary.js
-  var handleInput7 = (event, state) => {
-    const profile = getActiveProfile(state);
-    profile.vocabularyInput = event.target.value;
-  };
-  var handleAnswer2 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.vocabularyPending && profile.vocabularyInput && profile.vocabularyInput.trim().length > 0) {
-      profile.vocabularyError = false;
-      profile.vocabularyPending = true;
-      profile.vocabularyMessages.push({
-        role: "user",
-        content: profile.vocabularyInput.trim()
-      });
-      profile.vocabularyInput = "";
-      createMessage6(state, profile.vocabularyMessages, translate(state, "prompt-context"), translate(state, "prompt-vocabulary-follow_up")).then(([error, _response, result]) => {
-        profile.vocabularyPending = false;
-        if (error) {
-          profile.vocabularyError = error.toString();
-          const message = profile.vocabularyMessages.pop();
-          profile.vocabularyInput = message.content;
-          return;
-        }
-        profile.vocabularyMessages.push(result);
-        state.statisticVocabularyActivity++;
-        onActivity(state);
-      });
-    }
-  };
-  var handleGenerate5 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    if (!profile.vocabularyPending) {
-      profile.vocabularyError = false;
-      profile.vocabularyMessages = [];
-      profile.vocabularyPending = true;
-      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-vocabulary")).then(([error, _response, result]) => {
-        profile.vocabularyPending = false;
-        if (error) {
-          profile.vocabularyError = error.toString();
-          return;
-        }
-        profile.vocabularyMessages.push(result);
-      });
-    }
-  };
-  var handleReset8 = (_event, state) => {
-    const profile = getActiveProfile(state);
-    profile.vocabularyError = false;
-    profile.vocabularyMessages = [];
-    profile.vocabularyPending = false;
-  };
-  var handleBack10 = (_event, state) => {
-    setScreen(state, SCREENS.overview);
-  };
-  var vocabulary = (state) => {
-    const profile = getActiveProfile(state);
-    return [
-      node("p", [
-        node("b", translate(state, "greeting")),
-        node("br"),
-        translate(state, "vocabulary-intro")
-      ]),
-      ...conditional(profile.vocabularyMessages && profile.vocabularyMessages.length > 0, node("div", {
-        class: "messages"
-      }, profile.vocabularyMessages.map((message) => node("p", {
-        class: "message-" + message?.role
-      }, message?.content?.split(`
-`)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))))),
-      ...conditional(profile.vocabularyError, node("p", profile.vocabularyError)),
-      ...conditional(profile.vocabularyPending, node("p", {
-        class: "pending"
-      }), conditional(profile.vocabularyMessages && profile.vocabularyMessages.length > 0 && profile.vocabularyMessages.length < 3, node("textarea", {
-        class: "message-user",
-        id: "input-question",
-        keyup: handleInput7
-      }, profile.vocabularyInput))),
-      node("div", {
-        class: "row reverse"
-      }, [
-        ...conditional(profile.vocabularyMessages && profile.vocabularyMessages.length > 0 && profile.vocabularyMessages.length < 3, node("button", {
-          disabled: profile.vocabularyPending || !profile.vocabularyInput || profile.vocabularyInput.trim().length === 0,
-          type: "button",
-          click: handleAnswer2
-        }, translate(state, "button-answer")), node("button", {
-          disabled: profile.vocabularyPending,
-          type: "button",
-          click: handleGenerate5
-        }, translate(state, "button-generate"))),
-        ...conditional(profile.vocabularyPending || profile.vocabularyMessages && profile.vocabularyMessages.length > 0, node("button", {
-          click: handleReset8,
-          type: "button"
-        }, translate(state, "button-reset"))),
-        node("button", {
-          click: handleBack10,
-          type: "button"
-        }, translate(state, "button-go_back"))
-      ])
-    ];
-  };
-
-  // src/toaln/screens/profile.js
-  var handleTargetLanguage2 = (event, state) => {
-    const profile = getActiveProfile(state);
-    if (profile) {
-      profile.targetLanguage = event.target.selectedOptions[0].value;
-    }
-  };
-  var handleProficiencyLevel2 = (event, state) => {
-    const profile = getActiveProfile(state);
-    if (profile) {
-      profile.proficiencyLevel = event.target.selectedOptions[0].value;
-    }
-  };
-  var handleNewTopic2 = (event, state) => {
-    const profile = getActiveProfile(state);
-    if (profile && event.target.value) {
-      profile.topicsOfInterest.push(event.target.value);
-    }
-  };
-  var handleUpdateTopic2 = (event, state) => {
-    const index = Number.parseInt(event.target.getAttribute("data-index"));
-    const currentProfile = getActiveProfile(state);
-    if (!event.target.value) {
-      currentProfile.topicsOfInterest.splice(index, 1);
-    } else {
-      currentProfile.topicsOfInterest[index] = event.target.value;
-    }
-  };
-  var handleGoBack2 = (_event, state) => {
-    setScreen(state, SCREENS.options);
-  };
-  var profile = (state) => {
-    const currentProfile = getActiveProfile(state);
-    return [
-      node("b", translate(state, "greeting")),
-      node("label", {
-        for: "select_target_language"
-      }, translate(state, "profile-target_language")),
-      node("select", {
-        id: "select_target_language",
-        change: handleTargetLanguage2
-      }, LOCALE_CODES.map((localeCode) => node("option", {
-        selected: currentProfile?.targetLanguage === localeCode ? "selected" : false,
-        value: localeCode
-      }, translate(state, localeCode)))),
-      node("label", {
-        for: "select_proficiency_level"
-      }, translate(state, "profile-proficiency_level")),
-      node("select", {
-        id: "select_proficiency_level",
-        change: handleProficiencyLevel2
-      }, PROFICIENCY_LEVEL_CODES.map((proficiencyLevel) => node("option", {
-        selected: currentProfile?.proficiencyLevel === proficiencyLevel ? "selected" : false,
-        value: proficiencyLevel
-      }, translate(state, "proficiency_name-" + proficiencyLevel)))),
-      node("ul", translate(state, "proficiency_description-" + currentProfile?.proficiencyLevel).map((text) => node("li", text))),
-      node("label", {
-        for: "input_topics_of_interest"
-      }, translate(state, "profile-topics_of_interest")),
-      ...currentProfile?.topicsOfInterest?.map((topic, index) => node("input", {
-        "data-index": String(index),
-        keyup: handleUpdateTopic2,
-        value: topic
-      })),
-      node("input", {
-        keyup: handleNewTopic2,
-        id: "input_topics_of_interest"
-      }),
-      node("button", {
-        click: handleGoBack2,
-        type: "button"
-      }, translate(state, "button-go_back"))
-    ];
-  };
-
-  // src/toaln/screens/typing.js
+  // src/toaln/screens/exercises/typing.js
   var TYPING_LENGTHS = [
     "short",
     "medium",
     "long",
     "extra_long"
   ];
-  var handleInput8 = (event, state) => {
+  var handleInput7 = (event, state) => {
     const profile2 = getActiveProfile(state);
     profile2.typingInput = event.target.value;
   };
@@ -3301,7 +3201,7 @@
     const profile2 = getActiveProfile(state);
     profile2.typingLength = event.target.value;
   };
-  var handleGenerate6 = (_event, state) => {
+  var handleGenerate5 = (_event, state) => {
     const profile2 = getActiveProfile(state);
     if (!profile2.typingPending) {
       profile2.typingError = false;
@@ -3335,7 +3235,7 @@
       });
     }
   };
-  var handleReset9 = (_event, state) => {
+  var handleReset8 = (_event, state) => {
     const profile2 = getActiveProfile(state);
     profile2.typingCurrentIndex = 0;
     profile2.typingEndTime = null;
@@ -3346,7 +3246,7 @@
     profile2.typingPending = false;
     profile2.typingStartTime = null;
   };
-  var handleBack11 = (_event, state) => {
+  var handleBack10 = (_event, state) => {
     setScreen(state, SCREENS.overview);
   };
   var handleRestart = (_event, state) => {
@@ -3463,7 +3363,7 @@
             node("textarea", {
               class: "message-user",
               id: "input-topic",
-              input: handleInput8,
+              input: handleInput7,
               placeholder: translate(state, "typing-placeholder")
             }, profile2.typingInput || ""),
             node("label", {
@@ -3524,7 +3424,7 @@
         class: "row reverse"
       }, [
         ...conditional(!profile2.typingPending && !profile2.typingMessage, node("button", {
-          click: handleGenerate6,
+          click: handleGenerate5,
           disabled: profile2.typingPending,
           type: "button"
         }, translate(state, "button-generate"))),
@@ -3534,7 +3434,107 @@
         }, translate(state, "typing-restart"))),
         ...conditional(!profile2.typingPending && profile2.typingMessage, node("button", {
           type: "button",
-          click: handleReset9
+          click: handleReset8
+        }, translate(state, "button-reset"))),
+        node("button", {
+          click: handleBack10,
+          type: "button"
+        }, translate(state, "button-go_back"))
+      ])
+    ];
+  };
+
+  // src/toaln/screens/exercises/vocabulary.js
+  var handleInput8 = (event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.vocabularyInput = event.target.value;
+  };
+  var handleAnswer2 = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    if (!profile2.vocabularyPending && profile2.vocabularyInput && profile2.vocabularyInput.trim().length > 0) {
+      profile2.vocabularyError = false;
+      profile2.vocabularyPending = true;
+      profile2.vocabularyMessages.push({
+        role: "user",
+        content: profile2.vocabularyInput.trim()
+      });
+      profile2.vocabularyInput = "";
+      createMessage6(state, profile2.vocabularyMessages, translate(state, "prompt-context"), translate(state, "prompt-vocabulary-follow_up")).then(([error, _response, result]) => {
+        profile2.vocabularyPending = false;
+        if (error) {
+          profile2.vocabularyError = error.toString();
+          const message = profile2.vocabularyMessages.pop();
+          profile2.vocabularyInput = message.content;
+          return;
+        }
+        profile2.vocabularyMessages.push(result);
+        state.statisticVocabularyActivity++;
+        onActivity(state);
+      });
+    }
+  };
+  var handleGenerate6 = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    if (!profile2.vocabularyPending) {
+      profile2.vocabularyError = false;
+      profile2.vocabularyMessages = [];
+      profile2.vocabularyPending = true;
+      createMessage6(state, [], translate(state, "prompt-context"), translate(state, "prompt-vocabulary")).then(([error, _response, result]) => {
+        profile2.vocabularyPending = false;
+        if (error) {
+          profile2.vocabularyError = error.toString();
+          return;
+        }
+        profile2.vocabularyMessages.push(result);
+      });
+    }
+  };
+  var handleReset9 = (_event, state) => {
+    const profile2 = getActiveProfile(state);
+    profile2.vocabularyError = false;
+    profile2.vocabularyMessages = [];
+    profile2.vocabularyPending = false;
+  };
+  var handleBack11 = (_event, state) => {
+    setScreen(state, SCREENS.overview);
+  };
+  var vocabulary = (state) => {
+    const profile2 = getActiveProfile(state);
+    return [
+      node("p", [
+        node("b", translate(state, "greeting")),
+        node("br"),
+        translate(state, "vocabulary-intro")
+      ]),
+      ...conditional(profile2.vocabularyMessages && profile2.vocabularyMessages.length > 0, node("div", {
+        class: "messages"
+      }, profile2.vocabularyMessages.map((message) => node("p", {
+        class: "message-" + message?.role
+      }, message?.content?.split(`
+`)?.flatMap((content, index, results) => index === results.length - 1 ? [content] : [content, node("br")]))))),
+      ...conditional(profile2.vocabularyError, node("p", profile2.vocabularyError)),
+      ...conditional(profile2.vocabularyPending, node("p", {
+        class: "pending"
+      }), conditional(profile2.vocabularyMessages && profile2.vocabularyMessages.length > 0 && profile2.vocabularyMessages.length < 3, node("textarea", {
+        class: "message-user",
+        id: "input-question",
+        keyup: handleInput8
+      }, profile2.vocabularyInput))),
+      node("div", {
+        class: "row reverse"
+      }, [
+        ...conditional(profile2.vocabularyMessages && profile2.vocabularyMessages.length > 0 && profile2.vocabularyMessages.length < 3, node("button", {
+          disabled: profile2.vocabularyPending || !profile2.vocabularyInput || profile2.vocabularyInput.trim().length === 0,
+          type: "button",
+          click: handleAnswer2
+        }, translate(state, "button-answer")), node("button", {
+          disabled: profile2.vocabularyPending,
+          type: "button",
+          click: handleGenerate6
+        }, translate(state, "button-generate"))),
+        ...conditional(profile2.vocabularyPending || profile2.vocabularyMessages && profile2.vocabularyMessages.length > 0, node("button", {
+          click: handleReset9,
+          type: "button"
         }, translate(state, "button-reset"))),
         node("button", {
           click: handleBack11,
@@ -3633,18 +3633,18 @@
       }, [
         ...updateBanner(state2),
         ...match(state2.screen, {
+          [SCREENS.migrate]: () => migrate(state2),
+          [SCREENS.options]: () => options(state2),
+          [SCREENS.overview]: () => overview(state2),
+          [SCREENS.profile]: () => profile(state2),
           [SCREENS.clarification]: () => clarification(state2),
           [SCREENS.comprehension]: () => comprehension(state2),
           [SCREENS.conversation]: () => conversation(state2),
           [SCREENS.reading]: () => reading(state2),
           [SCREENS.rewrite]: () => rewrite(state2),
           [SCREENS.story]: () => story(state2),
-          [SCREENS.vocabulary]: () => vocabulary(state2),
           [SCREENS.typing]: () => typing(state2),
-          [SCREENS.overview]: () => overview(state2),
-          [SCREENS.options]: () => options(state2),
-          [SCREENS.migrate]: () => migrate(state2),
-          [SCREENS.profile]: () => profile(state2)
+          [SCREENS.vocabulary]: () => vocabulary(state2)
         }, () => setup(state2)),
         ...popupModal(state2),
         ...contextMenu(state2)
@@ -3698,4 +3698,4 @@
   }
 })();
 
-//# debugId=BF4849D1EAE108E964756E2164756E21
+//# debugId=1E7FEDABF70B87DE64756E2164756E21

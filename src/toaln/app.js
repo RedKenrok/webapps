@@ -23,17 +23,17 @@ import { updateBanner } from './screens/sections/update-banner.js'
 import { migrate } from './screens/migrate.js'
 import { options } from './screens/options.js'
 import { overview } from './screens/overview.js'
+import { profile } from './screens/profile.js'
 import { setup } from './screens/setup.js'
 
-import { conversation } from './screens/conversation.js'
-import { clarification } from './screens/clarification.js'
-import { comprehension } from './screens/comprehension.js'
-import { reading } from './screens/reading.js'
-import { rewrite } from './screens/rewrite.js'
-import { story } from './screens/story.js'
-import { vocabulary } from './screens/vocabulary.js'
-import { profile } from './screens/profile.js'
-import { typing } from './screens/typing.js'
+import { clarification } from './screens/exercises/clarification.js'
+import { comprehension } from './screens/exercises/comprehension.js'
+import { conversation } from './screens/exercises/conversation.js'
+import { reading } from './screens/exercises/reading.js'
+import { rewrite } from './screens/exercises/rewrite.js'
+import { story } from './screens/exercises/story.js'
+import { typing } from './screens/exercises/typing.js'
+import { vocabulary } from './screens/exercises/vocabulary.js'
 
 import { createIdentifier } from '../shared/utilities/identifiers.js'
 import { handleContextMenu } from './utilities/context-menu.js'
@@ -59,19 +59,19 @@ const initialize = () => {
       }, [
         ...updateBanner(state),
         ...m(state.screen, {
+          [SCREENS.migrate]: () => migrate(state),
+          [SCREENS.options]: () => options(state),
+          [SCREENS.overview]: () => overview(state),
+          [SCREENS.profile]: () => profile(state),
+
           [SCREENS.clarification]: () => clarification(state),
           [SCREENS.comprehension]: () => comprehension(state),
           [SCREENS.conversation]: () => conversation(state),
           [SCREENS.reading]: () => reading(state),
           [SCREENS.rewrite]: () => rewrite(state),
           [SCREENS.story]: () => story(state),
-          [SCREENS.vocabulary]: () => vocabulary(state),
           [SCREENS.typing]: () => typing(state),
-
-          [SCREENS.overview]: () => overview(state),
-          [SCREENS.options]: () => options(state),
-          [SCREENS.migrate]: () => migrate(state),
-          [SCREENS.profile]: () => profile(state),
+          [SCREENS.vocabulary]: () => vocabulary(state),
         }, () => setup(state)),
         ...popupModal(state),
         ...contextMenu(state),
